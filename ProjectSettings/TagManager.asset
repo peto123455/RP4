@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - enemyLayer
+  - ObjectNT
+  - Mask
+  - UnderMask
+  - Black
+  - Text
+  - Player
+  - RC
+  - PlayerEnemyCollidableOnly
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Objects
+    uniqueID: 718526343
+    locked: 0
+  - name: PlayerFeet
+    uniqueID: 2854859829
+    locked: 0
+  - name: ObjectsLeveled
+    uniqueID: 1470127249
+    locked: 0
+  - name: Bullets
+    uniqueID: 1431127417
+    locked: 0
+  - name: Entity
+    uniqueID: 599624929
+    locked: 0
+  - name: Player
+    uniqueID: 2315469799
+    locked: 0
+  - name: TOP
+    uniqueID: 2480865845
+    locked: 0
