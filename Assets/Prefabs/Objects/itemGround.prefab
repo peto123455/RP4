@@ -149,5 +149,6 @@ MonoBehaviour:
   akSprite: {fileID: 21300000, guid: 12476c9db70052646a65085380fdec4c, type: 3}
   fakSprite: {fileID: 21300000, guid: fdfc308cc9313a94ebde24acce36108c, type: 3}
   vestSprite: {fileID: 21300000, guid: 3bcea32455f21b74289d29c0bb281a37, type: 3}
+  spasSprite: {fileID: 21300000, guid: 39caf4084c6c1d74f981ec4818b73e52, type: 3}
   type: 0
   amount: 0

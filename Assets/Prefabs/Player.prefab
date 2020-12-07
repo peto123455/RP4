@@ -337,6 +337,9 @@ MonoBehaviour:
   soundHandgunReload: {fileID: 8300000, guid: be59e56853d532d4092f69a1b2c42681, type: 3}
   soundRifle: {fileID: 8300000, guid: 443e633778710da4cb16881a31004c4b, type: 3}
   soundPickup: {fileID: 8300000, guid: 14bce16ed31f1724e8c805b78e1b2768, type: 3}
+  shotgunReload: {fileID: 8300000, guid: 0a4fea899cf4ebf4eb0277f43b67ddac, type: 3}
+  shotgunShoot: {fileID: 8300000, guid: fe344bd6a3105144cbc9f59aad7d9de5, type: 3}
+  shotgunChamber: {fileID: 8300000, guid: be003f81f073d5b4f92e16279ab78f5f, type: 3}
 --- !u!114 &-8456191915761850580
 MonoBehaviour:
   m_ObjectHideFlags: 0

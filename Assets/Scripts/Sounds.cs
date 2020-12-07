@@ -10,7 +10,10 @@ public class Sounds : MonoBehaviour
         soundKnife,
         soundHandgunReload,
         soundRifle,
-        soundPickup;
+        soundPickup,
+        shotgunReload,
+        shotgunShoot,
+        shotgunChamber;
 
     /*void Awake()
     {
@@ -36,5 +39,8 @@ public class Sounds : MonoBehaviour
         else if (id == 2) sound.PlayOneShot(soundHandgunReload);
         else if (id == 3) sound.PlayOneShot(soundRifle);
         else if (id == 4) sound.PlayOneShot(soundPickup);
+        else if (id == 5) sound.PlayOneShot(shotgunReload);
+        else if (id == 6) sound.PlayOneShot(shotgunShoot);
+        else if (id == 7) sound.PlayOneShot(shotgunChamber);
     }
 }

@@ -10,9 +10,7 @@ public class WeaponList : MonoBehaviour
         public string name; // Meno zbrane
         public int sound;
         public float cooldownTime, cooldownReload; // Cooldowny
-        public int maxMagazine;
-        public int magazine;
-        public int bulletType;
+        public int maxMagazine, magazine, bulletType;
         public int ammo = 0;
         public float cooldown = 0;
         public bool isCooldown = false;
@@ -48,6 +46,15 @@ public class WeaponList : MonoBehaviour
             }
         }
 
+        public void ReloadByOne()
+        {
+            if(ammo > 0 && magazine < this.maxMagazine)
+            {
+                this.ammo -= 1;
+                this.magazine += 1;
+            }
+        }
+
         public void SetWeapon(bool hasWeapon)
         {
             this.hasWeapon = hasWeapon;
@@ -70,4 +77,5 @@ public class WeaponList : MonoBehaviour
     public Weapon knife = new Weapon("Knife", 1, 0, 0.5f, 0f, 0, false, "Player_knife_attack", "");
     public Weapon glock = new Weapon("Glock-21", 0, 1, 0.15f, 1f, 13, true, "Player_handgun_shoot", "Player_handgun_reload");
     public Weapon ak = new Weapon("AK-47", 3, 2, 0.1f, 1f, 30, false, "Player_rifle_shoot", "Player_rifle_reload");
+    public Weapon shotgun = new Weapon("Spas-12", 6, 3, 0.7f, 0.65f, 8, true, "Player_shotgun_shoot", "Player_shotgun_reload");
 }

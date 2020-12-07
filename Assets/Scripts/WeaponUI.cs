@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WeaponUI : MonoBehaviour
 {
-    [SerializeField] private Sprite imageKnife, imageGlock, imageAK;
+    [SerializeField] private Sprite imageKnife, imageGlock, imageAK, imageShotgun;
     [SerializeField] private Image image;
     [SerializeField] private Text ammoText, healthText, shieldText, levelText, popupText;
     [SerializeField] private Slider healthbar, shieldbar;
@@ -44,6 +44,10 @@ public class WeaponUI : MonoBehaviour
             case 2:
                 image.sprite = imageAK;
                 ammoText.text = player.wl.ak.magazine.ToString() + " / " + player.wl.ak.ammo.ToString();
+                break;
+            case 3:
+                image.sprite = imageShotgun;
+                ammoText.text = player.wl.shotgun.magazine.ToString() + " / " + player.wl.shotgun.ammo.ToString();
                 break;
         }
 

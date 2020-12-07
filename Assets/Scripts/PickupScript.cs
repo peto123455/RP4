@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickupScript : MonoBehaviour
 {
     [SerializeField] private  GameObject floatingText;
-    [SerializeField] private Sprite glockSprite, akSprite, fakSprite, vestSprite;
+    [SerializeField] private Sprite glockSprite, akSprite, fakSprite, vestSprite, spasSprite;
     [SerializeField] private int type, amount;
 
 
@@ -20,6 +20,7 @@ public class PickupScript : MonoBehaviour
     {
         if (type == 1) GetComponent<SpriteRenderer>().sprite = glockSprite;
         else if (type == 2) GetComponent<SpriteRenderer>().sprite = akSprite;
+        else if (type == 3) GetComponent<SpriteRenderer>().sprite = spasSprite;
         else if (type == 101) GetComponent<SpriteRenderer>().sprite = fakSprite;
         else if (type == 102) GetComponent<SpriteRenderer>().sprite = vestSprite;
     }
@@ -49,6 +50,17 @@ public class PickupScript : MonoBehaviour
                     collision.gameObject.GetComponent<Player>().GiveAmmo(type, amount); //Dá hráčovi náboje
                     if (!collision.gameObject.GetComponent<Player>().HasWeapon(type)) GiveItem(collision.gameObject, type); //Ak nemá zbraň, tak mu ju dá
                     string str = "Picked: " + amount + " 7.62×39mm bullets"; //Naformátuje string
+                    collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
+                    ShowText(str, 1.5f, 0); //Zobrazí text v hre
+                    Destroy(gameObject); //Zničí sa
+                }
+                break;
+            case 3:
+                if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
+                {
+                    collision.gameObject.GetComponent<Player>().GiveAmmo(type, amount); //Dá hráčovi náboje
+                    if (!collision.gameObject.GetComponent<Player>().HasWeapon(type)) GiveItem(collision.gameObject, type); //Ak nemá zbraň, tak mu ju dá
+                    string str = "Picked: " + amount + " shotgun slug rounds"; //Naformátuje string
                     collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
                     ShowText(str, 1.5f, 0); //Zobrazí text v hre
                     Destroy(gameObject); //Zničí sa
@@ -103,6 +115,11 @@ public class PickupScript : MonoBehaviour
                 break;
             case 2:
                 str = "Picked: Ak-47"; //Formátovanie textu
+                obj.GetComponent<Player>().SetWeapon(type, true); //Nastavenie zbrane
+                ShowText(str, 2f, 0); //Zobrazenie textu
+                break;
+            case 3:
+                str = "Picked: Spas-12"; //Formátovanie textu
                 obj.GetComponent<Player>().SetWeapon(type, true); //Nastavenie zbrane
                 ShowText(str, 2f, 0); //Zobrazenie textu
                 break;

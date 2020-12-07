@@ -39,12 +39,15 @@ public class MainMenu : MonoBehaviour
         /* Náboje */
         PlayerPrefs.SetInt("ammoGlock", 0);
         PlayerPrefs.SetInt("ammoAK", 0);
+        PlayerPrefs.SetInt("ammoShotgun", 0);
 
         PlayerPrefs.SetInt("magazineGlock", 0);
         PlayerPrefs.SetInt("magazineAK", 0);
+        PlayerPrefs.SetInt("magazineShotgun", 0);
         /* Zbrane */
         PlayerPrefs.SetInt("hasGlock", 0); //Nepodporuje bool, takže používam integer
         PlayerPrefs.SetInt("hasAK", 0);
+        PlayerPrefs.SetInt("hasShotgun", 0);
     }
 
     public void Continue()

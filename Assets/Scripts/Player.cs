@@ -127,53 +127,6 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButton("Fire1"))
         {
-            /* KNIFE */
-            /*if (holdingItem == 0 && !wl.knife.isCooldown)
-            {
-                wl.knife.isCooldown = true;
-                wl.knife.cooldown = wl.knife.cooldownTime;
-                body.Play("Player_knife_attack");
-                RaycastHit2D checkRay = Physics2D.Raycast(gameObject.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 1.5f, enemyLayer);
-                if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
-                {
-                    Enemy enemy = checkRay.collider.GetComponent<Enemy>();
-                    enemy.TakeDamage(100, false);
-                    sounds.PlaySound(1, sound);
-                    GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
-                    Destroy(hitInstance, 2f);
-                }
-            }*/
-            /* GLOCK 21 */
-            /*else if (holdingItem == 1 && !wl.glock.isCooldown && Input.GetButtonDown("Fire1"))
-            {
-                if (wl.glock.magazine > 0)
-                {
-                    wl.glock.magazine -= 1;
-                    sounds.PlaySound(0, sound);
-                    //wl.glock.isCooldown = true;
-                    //wl.glock.cooldown = wl.glock.cooldownTime;
-                    Shoot(1);
-                    //StartCoroutine(Shoot(firePoint.position, mousePos - new Vector2(firePoint.position.x, firePoint.position.y)));
-                    body.Play("Player_handgun_shoot");
-                    //if (magazineGlock <= 0) ReloadGun(1);
-                }
-                else if (wl.glock.ammo > 0) ReloadGun(1);
-            }*/
-            /* AK-47 */
-            /*else if (holdingItem == 2 && !wl.ak.isCooldown)
-            {
-                if (wl.ak.magazine > 0)
-                {
-                    wl.ak.magazine -= 1;
-                    sounds.PlaySound(3, sound);
-                    wl.ak.isCooldown = true;
-                    wl.ak.cooldown = wl.ak.cooldownTime;
-                    Shoot(2);
-                    body.Play("Player_rifle_shoot");
-                }
-                else if (wl.ak.ammo > 0) ReloadGun(2);
-            }*/
-
             if(holdingItem < 100) //Všetky zbrane
             {
                 WeaponList.Weapon weapon = GetWeaponByID(holdingItem);
@@ -209,42 +162,7 @@ public class Player : MonoBehaviour
 
     private void UpdateCooldowns()
     {
-        /*
-        if (knife.isCooldown)
-        {
-            cooldownKnife -= Time.deltaTime;
-
-            if (cooldownKnife <= 0)
-            {
-                cooldownKnife = 0;
-                knife.isCooldown = false;
-            }
-        }
-
-        if (glock.isCooldown)
-        {
-            cooldownHandgun -= Time.deltaTime;
-
-            if (cooldownHandgun <= 0)
-            {
-                cooldownHandgun = 0;
-                glock.isCooldown = false;
-            }
-        }
-
-        if (ak.isCooldown)
-        {
-            cooldownRifle -= Time.deltaTime;
-
-            if (cooldownRifle <= 0)
-            {
-                cooldownRifle = 0;
-                ak.isCooldown = false;
-            }
-        }
-        */
-
-        for(byte i = 0; i < 3; ++i)
+        for(byte i = 0; i < 4; ++i)
         {
             UpdateCooldown(GetWeaponByID(i));
         }
@@ -269,6 +187,7 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.Alpha1)) SelectItem(0); //Knife
         else if (Input.GetKey(KeyCode.Alpha2) && wl.glock.hasWeapon) SelectItem(1); //Glock
         else if (Input.GetKey(KeyCode.Alpha3) && wl.ak.hasWeapon) SelectItem(2); //AK-47
+        else if (Input.GetKey(KeyCode.Alpha4) && wl.shotgun.hasWeapon) SelectItem(3); //AK-47
 
         if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(GetWeaponByID(holdingItem)); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
@@ -320,29 +239,8 @@ public class Player : MonoBehaviour
     {
         if(GetSelectedItem() == 1 && !HasWeapon(1)) SelectItem(0); /* Ak nemá glock, dá mu ho preč z ruky */
         else if (GetSelectedItem() == 2 && !HasWeapon(2)) SelectItem(0);
+        else if (GetSelectedItem() == 3 && !HasWeapon(3)) SelectItem(0);
     }
-
-    /*IEnumerator Shoot(Vector2 shootPos, Vector2 shootDir)  //Toto si tu ponechávam, keby som to niekedy plánovať využiť
-    {
-        RaycastHit2D bullet = Physics2D.Raycast(shootPos, shootDir);
-        Debug.DrawRay(shootPos, shootDir, Color.green);
-        if (bullet.collider != null)
-        {
-            Enemy target = bullet.collider.GetComponent<Enemy>();
-            if (target != null)
-            {
-                target.TakeDamage(10);
-            }
-        }
-        lr.SetPosition(0, firePoint.position);
-        lr.SetPosition(1, mousePos);
-
-        lr.enabled = true;
-
-        yield return new WaitForSeconds(0.02f);
-
-        lr.enabled = false;
-    }*/
 
     void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
@@ -358,6 +256,10 @@ public class Player : MonoBehaviour
                 if (Random.Range(0, 5) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(50, true);
                 else bullet.GetComponent<Bullet>().SetBulletDamage(25, false);
                 break;
+            case 3: //shotgun slug
+                if (Random.Range(0, 2) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(60, true);
+                else bullet.GetComponent<Bullet>().SetBulletDamage(40, false);
+                break;
         }
 
         Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
@@ -366,62 +268,49 @@ public class Player : MonoBehaviour
 
     private void ReloadGun(WeaponList.Weapon weapon) /* Funkcia, ktorá prebije zbraň */
     {
-        /*switch (gun) /* Switch, ktorý zisťuje, ktorú zbraň chce hráč prebiť 
+
+        if (weapon == wl.knife) return;
+        else if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown)
         {
-            case 1:
-                if (wl.glock.magazine != wl.glock.maxMagazine && !wl.glock.isCooldown)
-                {
-                    wl.glock.isCooldown = true;
-                    wl.glock.cooldown = wl.glock.cooldownReload;
-                    wl.glock.Reload();
-                    if (wl.glock.magazine != 0)
-                    {
-                        sounds.PlaySound(2, sound);
-                        body.Play(wl.glock.animationName);
-                    }
-                }
-                break;
-            case 2:
-                if (wl.ak.magazine != wl.ak.maxMagazine && !wl.ak.isCooldown)
-                {
-                    wl.ak.isCooldown = true;
-                    wl.ak.cooldown = wl.ak.cooldownReload;
-                    wl.ak.Reload();
-                    if (wl.ak.magazine != 0)
-                    {
-                        sounds.PlaySound(2, sound);
-                        body.Play(wl.ak.animationName);
-                    }
-                }
-                break;
-        }*/
-        if (weapon == wl.knife) return; //Nech ignoruje nožík
-        if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown)
-        {
-            weapon.SetCooldown(weapon.cooldownReload);
-            weapon.Reload();
-            if (weapon.magazine != 0)
+            if(weapon == wl.shotgun)
             {
-                sounds.PlaySound(2, sound);
+                weapon.SetCooldown(weapon.cooldownReload);
+                weapon.ReloadByOne();
+                sounds.PlaySound(5, sound);
                 body.Play(weapon.reloadAnimationName);
+                if(weapon.magazine == weapon.maxMagazine)
+                {
+                    weapon.SetCooldown(weapon.cooldownReload * 2);
+                    StartCoroutine(DelayedSound(weapon.cooldownReload, 7));
+                }
+                else StartCoroutine(ShotgunReload());
+            }
+            else
+            {
+                weapon.SetCooldown(weapon.cooldownReload);
+                weapon.Reload();
+                if (weapon.magazine != 0)
+                {
+                    sounds.PlaySound(2, sound);
+                    body.Play(weapon.reloadAnimationName);
+                }
             }
         }
     }
 
-    /*private void CalcAmmo(ref int magazine, ref int ammo, int maximum)
+    IEnumerator DelayedSound(float delay, int sound)
     {
-        ammo += magazine;
-        if(ammo >= maximum)
-        {
-            magazine = maximum;
-            ammo -= maximum;
-        }
-        else
-        {
-            magazine = ammo;
-            ammo = 0;
-        }
-    }*/
+        yield return new WaitForSeconds(delay);
+
+        sounds.PlaySound(sound, this.sound);
+    }
+
+    IEnumerator ShotgunReload()
+    {
+        yield return new WaitForSeconds(0.75f);
+
+        if(holdingItem == 3) ReloadGun(GetWeaponByID(holdingItem));
+    }
 
     public void TakeDamage(int damage, bool critical) /* Funkcia, ktorá odobere hráčovi životy */
     {
@@ -443,21 +332,6 @@ public class Player : MonoBehaviour
             OnDeath();
         }
     }
-
-    /*public class Ammo
-    {
-        public int magazine;
-        public int ammo;
-        public float cooldown;
-        public bool isCooldown = false;
-        public bool hasWeapon = false;
-
-        public Ammo(int magazine, int ammo)
-        {
-            this.magazine = magazine;
-            this.ammo = ammo;
-        }
-    }*/
 
     private void Movement()
     {
@@ -518,6 +392,8 @@ public class Player : MonoBehaviour
                 return wl.glock;
             case 2:
                 return wl.ak;
+            case 3:
+                return wl.shotgun;
         }
         return null;
     }
@@ -593,12 +469,15 @@ public class Player : MonoBehaviour
 
         wl.glock.ammo = PlayerPrefs.GetInt("ammoGlock", 0);
         wl.ak.ammo = PlayerPrefs.GetInt("ammoAK", 0);
+        wl.shotgun.ammo = PlayerPrefs.GetInt("ammoShotgun", 0);
 
         wl.glock.magazine = PlayerPrefs.GetInt("magazineGlock", 0);
         wl.ak.magazine = PlayerPrefs.GetInt("magazineAK", 0);
+        wl.shotgun.magazine = PlayerPrefs.GetInt("magazineShotgun", 0);
 
         wl.glock.SetWeapon(IntToBool(PlayerPrefs.GetInt("hasGlock", 0)));
         wl.ak.SetWeapon(IntToBool(PlayerPrefs.GetInt("hasAK", 0)));
+        wl.shotgun.SetWeapon(IntToBool(PlayerPrefs.GetInt("hasShotgun", 0)));
 
         currentLevel = PlayerPrefs.GetInt("level", 1);
     }
@@ -610,12 +489,15 @@ public class Player : MonoBehaviour
 
         PlayerPrefs.SetInt("ammoGlock", wl.glock.ammo);
         PlayerPrefs.SetInt("ammoAK", wl.ak.ammo);
+        PlayerPrefs.SetInt("ammoShotgun", wl.shotgun.ammo);
 
         PlayerPrefs.SetInt("magazineGlock", wl.glock.magazine);
         PlayerPrefs.SetInt("magazineAK", wl.ak.magazine);
+        PlayerPrefs.SetInt("magazineShotgun", wl.shotgun.magazine);
 
         PlayerPrefs.SetInt("hasGlock", BoolToInt(wl.glock.HasWeapon()));
         PlayerPrefs.SetInt("hasAK", BoolToInt(wl.ak.HasWeapon()));
+        PlayerPrefs.SetInt("hasShotgun", BoolToInt(wl.shotgun.HasWeapon()));
     }
 
     private bool IntToBool(int integer)
