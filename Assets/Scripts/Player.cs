@@ -103,7 +103,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() /* Funkcia, ktorá sa pravidelne vykonáva nezávisle od počtu snímkov za sekundu */
     {
-        /* Kontrola kláves */
         if(controlState == ControlState.Player)
         {
             Movement(); //Pohyb hráča
@@ -129,7 +128,7 @@ public class Player : MonoBehaviour
         if (Input.GetButton("Fire1"))
         {
             /* KNIFE */
-            if (holdingItem == 0 && !wl.knife.isCooldown) /* Podmienka, ktoá kontroluje či hráč drží RMB, má v ruke ňôž a či je pripravený */
+            /*if (holdingItem == 0 && !wl.knife.isCooldown)
             {
                 wl.knife.isCooldown = true;
                 wl.knife.cooldown = wl.knife.cooldownTime;
@@ -143,9 +142,9 @@ public class Player : MonoBehaviour
                     GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
                     Destroy(hitInstance, 2f);
                 }
-            }
+            }*/
             /* GLOCK 21 */
-            else if (holdingItem == 1 && !wl.glock.isCooldown && Input.GetButtonDown("Fire1"))
+            /*else if (holdingItem == 1 && !wl.glock.isCooldown && Input.GetButtonDown("Fire1"))
             {
                 if (wl.glock.magazine > 0)
                 {
@@ -159,9 +158,9 @@ public class Player : MonoBehaviour
                     //if (magazineGlock <= 0) ReloadGun(1);
                 }
                 else if (wl.glock.ammo > 0) ReloadGun(1);
-            }
+            }*/
             /* AK-47 */
-            else if (holdingItem == 2 && !wl.ak.isCooldown)
+            /*else if (holdingItem == 2 && !wl.ak.isCooldown)
             {
                 if (wl.ak.magazine > 0)
                 {
@@ -173,6 +172,37 @@ public class Player : MonoBehaviour
                     body.Play("Player_rifle_shoot");
                 }
                 else if (wl.ak.ammo > 0) ReloadGun(2);
+            }*/
+
+            if(holdingItem < 100) //Všetky zbrane
+            {
+                WeaponList.Weapon weapon = GetWeaponByID(holdingItem);
+                if(!weapon.isCooldown && !weapon.playerIgnoreCooldown || weapon.playerIgnoreCooldown && Input.GetButtonDown("Fire1"))
+                {
+                    if(weapon == wl.knife)
+                    {
+                        weapon.SetCooldown(weapon.cooldownTime);
+                        body.Play(weapon.shootAnimationName);
+                        RaycastHit2D checkRay = Physics2D.Raycast(gameObject.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 1.5f, enemyLayer);
+                        if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
+                        {
+                            Enemy enemy = checkRay.collider.GetComponent<Enemy>();
+                            enemy.TakeDamage(100, false);
+                            sounds.PlaySound(weapon.sound, sound);
+                            GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
+                            Destroy(hitInstance, 2f);
+                        }
+                    }
+                    else if(weapon.magazine > 0)
+                    {
+                        weapon.SetCooldown(weapon.cooldownTime);
+                        Shoot(weapon);
+                        weapon.magazine -= 1;
+                        sounds.PlaySound(weapon.sound, sound);
+                        body.Play(weapon.shootAnimationName);
+                    }
+                    else if (weapon.ammo > 0) ReloadGun(weapon);
+                }
             }
         }
     }
@@ -240,7 +270,7 @@ public class Player : MonoBehaviour
         else if (Input.GetKey(KeyCode.Alpha2) && wl.glock.hasWeapon) SelectItem(1); //Glock
         else if (Input.GetKey(KeyCode.Alpha3) && wl.ak.hasWeapon) SelectItem(2); //AK-47
 
-        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(holdingItem); //Reload
+        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(GetWeaponByID(holdingItem)); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
     }
 
@@ -314,11 +344,11 @@ public class Player : MonoBehaviour
         lr.enabled = false;
     }*/
 
-    void Shoot(int type) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
+    void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
         GameObject bullet = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
 
-        switch (type)
+        switch (weapon.bulletType)
         {
             case 1:
                 if (Random.Range(0, 10) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(40, true);
@@ -334,20 +364,20 @@ public class Player : MonoBehaviour
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
 
-    private void ReloadGun(int gun) /* Funkcia, ktorá prebije zbraň */
+    private void ReloadGun(WeaponList.Weapon weapon) /* Funkcia, ktorá prebije zbraň */
     {
-        switch (gun) /* Switch, ktorý zisťuje, ktorú zbraň chce hráč prebiť */
+        /*switch (gun) /* Switch, ktorý zisťuje, ktorú zbraň chce hráč prebiť 
         {
             case 1:
                 if (wl.glock.magazine != wl.glock.maxMagazine && !wl.glock.isCooldown)
                 {
                     wl.glock.isCooldown = true;
                     wl.glock.cooldown = wl.glock.cooldownReload;
-                    CalcAmmo(ref wl.glock.magazine, ref wl.glock.ammo, wl.glock.maxMagazine);
+                    wl.glock.Reload();
                     if (wl.glock.magazine != 0)
                     {
                         sounds.PlaySound(2, sound);
-                        body.Play("Player_handgun_reload");
+                        body.Play(wl.glock.animationName);
                     }
                 }
                 break;
@@ -356,18 +386,29 @@ public class Player : MonoBehaviour
                 {
                     wl.ak.isCooldown = true;
                     wl.ak.cooldown = wl.ak.cooldownReload;
-                    CalcAmmo(ref wl.ak.magazine, ref wl.ak.ammo, wl.ak.maxMagazine);
+                    wl.ak.Reload();
                     if (wl.ak.magazine != 0)
                     {
                         sounds.PlaySound(2, sound);
-                        body.Play("Player_rifle_reload");
+                        body.Play(wl.ak.animationName);
                     }
                 }
                 break;
+        }*/
+        if (weapon == wl.knife) return; //Nech ignoruje nožík
+        if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown)
+        {
+            weapon.SetCooldown(weapon.cooldownReload);
+            weapon.Reload();
+            if (weapon.magazine != 0)
+            {
+                sounds.PlaySound(2, sound);
+                body.Play(weapon.reloadAnimationName);
+            }
         }
     }
 
-    private void CalcAmmo(ref int magazine, ref int ammo, int maximum) /* Funkcia, ktorá prehodí náboje do zásobníka */
+    /*private void CalcAmmo(ref int magazine, ref int ammo, int maximum)
     {
         ammo += magazine;
         if(ammo >= maximum)
@@ -380,7 +421,7 @@ public class Player : MonoBehaviour
             magazine = ammo;
             ammo = 0;
         }
-    }
+    }*/
 
     public void TakeDamage(int damage, bool critical) /* Funkcia, ktorá odobere hráčovi životy */
     {
