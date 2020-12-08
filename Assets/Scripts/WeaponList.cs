@@ -24,9 +24,9 @@ public class WeaponList : MonoBehaviour
             this.name = name;
             this.sound = sound;
             this.bulletType = bulletType;
+            this.maxMagazine = maxMagazine;
             this.cooldownTime = cooldownTime;
             this.cooldownReload = cooldownReload;
-            this.maxMagazine = maxMagazine;
             this.shootAnimationName = shootAnimationName;
             this.reloadAnimationName = reloadAnimationName;
             this.playerIgnoreCooldown = playerIgnoreCooldown;
