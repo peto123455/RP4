@@ -11,6 +11,8 @@ public class WeaponUI : MonoBehaviour
     [SerializeField] private Slider healthbar, shieldbar;
     [SerializeField] private GameObject popupWindow;
 
+    private List<Sprite> sprites = new List<Sprite>();
+
     private float popupTime;
 
     private Player player;
@@ -19,9 +21,21 @@ public class WeaponUI : MonoBehaviour
     {
         popupTime = 0;
         player = GameObject.Find("Player").GetComponent<Player>();
+
+        sprites.Add(imageKnife);
+        sprites.Add(imageGlock);
+        sprites.Add(imageAK);
+        sprites.Add(imageShotgun);
     }
 
     void Update()
+    {
+        UpdateUI();
+
+        if(popupWindow.activeSelf && popupTime < Time.time) popupWindow.SetActive(false);
+    }
+
+    private void UpdateUI()
     {
         levelText.text = "Level " + player.currentLevel.ToString();
         //Životy
@@ -31,25 +45,14 @@ public class WeaponUI : MonoBehaviour
         shieldbar.value = player.armor;
         shieldText.text = player.armor.ToString();
         //Zbrane
-        switch (player.GetSelectedItem())
+        WeaponList.Weapon weapon = player.GetHoldingWeapon();
+        if(weapon.id == 0)
         {
-            case 0:
-                ammoText.text = "KNIFE";
-                image.sprite = imageKnife;
-                break;
-            case 1:
-                ShowWeapon(imageGlock, player.wl.glock.magazine, player.wl.glock.ammo);
-                break;
-            case 2:
-                ShowWeapon(imageAK, player.wl.ak.magazine, player.wl.ak.ammo);
-                break;
-            case 3:
-                ShowWeapon(imageShotgun, player.wl.shotgun.magazine, player.wl.shotgun.ammo);
-                break;
+            image.sprite = imageKnife;
+            ammoText.text = "KNIFE";
+            return;
         }
-
-
-        if(popupWindow.activeSelf && popupTime < Time.time) popupWindow.SetActive(false);
+        ShowWeapon(sprites[weapon.id], weapon.magazine, weapon.ammo);
     }
 
     public void ShowText(float time, string text)

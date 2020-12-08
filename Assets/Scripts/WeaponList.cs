@@ -10,7 +10,7 @@ public class WeaponList : MonoBehaviour
         public string name; // Meno zbrane
         public int sound;
         public float cooldownTime, cooldownReload; // Cooldowny
-        public int maxMagazine, magazine, bulletType;
+        public int id, maxMagazine, magazine, bulletType;
         public int ammo = 0;
         public float cooldown = 0;
         public bool isCooldown = false;
@@ -18,8 +18,9 @@ public class WeaponList : MonoBehaviour
         public bool playerIgnoreCooldown = false;
         public string shootAnimationName, reloadAnimationName;
 
-        public Weapon(string name, int sound, int bulletType, float cooldownTime, float cooldownReload, int maxMagazine, bool playerIgnoreCooldown, string shootAnimationName, string reloadAnimationName) //Konštruktor
+        public Weapon(int id, string name, int sound, int bulletType, float cooldownTime, float cooldownReload, int maxMagazine, bool playerIgnoreCooldown, string shootAnimationName, string reloadAnimationName = "") //Konštruktor
         {
+            this.id = id;
             this.name = name;
             this.sound = sound;
             this.bulletType = bulletType;
@@ -71,11 +72,24 @@ public class WeaponList : MonoBehaviour
             this.cooldown = cooldown;
         }
 
+        public void GiveAmmo(int amount) /* Funkcia, ktorá po zavolaní dá hráčovi náboje do príslušnej zbrane */
+        {
+            this.ammo += amount;
+        }
+
+        public int GetID()
+        {
+            return this.id;
+        }
+
     }
-    
-    // Inštancie //
-    public Weapon knife = new Weapon("Knife", 1, 0, 0.5f, 0f, 0, false, "Player_knife_attack", "");
-    public Weapon glock = new Weapon("Glock-21", 0, 1, 0.15f, 1f, 13, true, "Player_handgun_shoot", "Player_handgun_reload");
-    public Weapon ak = new Weapon("AK-47", 3, 2, 0.1f, 1f, 30, false, "Player_rifle_shoot", "Player_rifle_reload");
-    public Weapon shotgun = new Weapon("Spas-12", 6, 3, 0.7f, 0.65f, 8, true, "Player_shotgun_shoot", "Player_shotgun_reload");
+
+
+    public List<Weapon> weapons = new List<Weapon>
+    {
+        new Weapon(0, "Knife",      1, 0, 0.5f, 0f, 0, false, "Player_knife_attack"),
+        new Weapon(1, "Glock-21",   0, 1, 0.2f, 1f, 13, true, "Player_handgun_shoot", "Player_handgun_reload"),
+        new Weapon(2, "AK-47",      3, 2, 0.1f, 1f, 30, false, "Player_rifle_shoot", "Player_rifle_reload"),
+        new Weapon(3, "Spas-12",    6, 3, 0.7f, 0.65f, 8, true, "Player_shotgun_shoot", "Player_shotgun_reload")
+    }; //Tu vytváram zbrane a vkladám ich do zoznamu
 }

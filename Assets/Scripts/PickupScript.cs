@@ -27,45 +27,36 @@ public class PickupScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision) //Funkcia, ktorá sa vykoná pri kolízií hráča s objektom
     {
+        if(type < 100)
+        {
+            if(collision.gameObject.tag == "Player")
+            {
+                GameObject Player = collision.gameObject;
+                WeaponList.Weapon weapon = Player.GetComponent<Player>().GetWeaponByID(type); 
+
+                weapon.GiveAmmo(amount); //Dá hráčovi náboje
+                if (!weapon.HasWeapon()) GiveWeapon(weapon); //Ak nemá zbraň, tak mu ju dá
+                string str = "Picked: " + amount; //Naformátuje string
+                switch(weapon.bulletType)
+                {
+                    case 1:
+                        str += " 9mm bullets";
+                        break;
+                    case 2:
+                        str += " 7.62×39mm bullets";
+                        break;
+                    case 3:
+                        str += " shotgun slug rounds";
+                        break;
+                }
+                Player.GetComponent<Sounds>().PlaySound(4, Player.GetComponent<AudioSource>()); //Prehrá zvuk
+                ShowText(str, 1.5f, 0); //Zobrazí text v hre
+                Destroy(gameObject); //Zničí sa
+            }
+        }
+        else
         switch (type) //1:glock, 2:AK, 101:First Aid Kit
         {
-            //////////////////////////
-            //        ZBRANE        //
-            //        1-100         //
-            //////////////////////////
-            case 1:
-                if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
-                {
-                    collision.gameObject.GetComponent<Player>().GiveAmmo(type, amount); //Dá hráčovi náboje
-                    if (!collision.gameObject.GetComponent<Player>().HasWeapon(type)) GiveItem(collision.gameObject, type); //Ak nemá zbraň, tak mu ju dá
-                    string str = "Picked: " + amount + " 9mm bullets"; //Naformátuje string
-                    collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
-                    ShowText(str, 1.5f, 0); //Zobrazí text v hre
-                    Destroy(gameObject); //Zničí sa
-                }
-                break;
-            case 2:
-                if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
-                {
-                    collision.gameObject.GetComponent<Player>().GiveAmmo(type, amount); //Dá hráčovi náboje
-                    if (!collision.gameObject.GetComponent<Player>().HasWeapon(type)) GiveItem(collision.gameObject, type); //Ak nemá zbraň, tak mu ju dá
-                    string str = "Picked: " + amount + " 7.62×39mm bullets"; //Naformátuje string
-                    collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
-                    ShowText(str, 1.5f, 0); //Zobrazí text v hre
-                    Destroy(gameObject); //Zničí sa
-                }
-                break;
-            case 3:
-                if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
-                {
-                    collision.gameObject.GetComponent<Player>().GiveAmmo(type, amount); //Dá hráčovi náboje
-                    if (!collision.gameObject.GetComponent<Player>().HasWeapon(type)) GiveItem(collision.gameObject, type); //Ak nemá zbraň, tak mu ju dá
-                    string str = "Picked: " + amount + " shotgun slug rounds"; //Naformátuje string
-                    collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
-                    ShowText(str, 1.5f, 0); //Zobrazí text v hre
-                    Destroy(gameObject); //Zničí sa
-                }
-                break;
             ///////////////////////
             //       ITEMY       //
             //       101+        //
@@ -103,26 +94,10 @@ public class PickupScript : MonoBehaviour
         text.GetComponent<FloatingScript>().SetText(str, offset, color); //Nastaví mu text, odchylku a farbu
     }
 
-    private void GiveItem(GameObject obj, int type)
+    private void GiveWeapon(WeaponList.Weapon weapon)
     {
-        string str;
-        switch (type)
-        {
-            case 1:
-                str = "Picked: Glock-21"; //Formátovanie textu
-                obj.GetComponent<Player>().SetWeapon(type, true); //Nastavenie zbrane
-                ShowText(str, 2f, 0); //Zobrazenie textu
-                break;
-            case 2:
-                str = "Picked: Ak-47"; //Formátovanie textu
-                obj.GetComponent<Player>().SetWeapon(type, true); //Nastavenie zbrane
-                ShowText(str, 2f, 0); //Zobrazenie textu
-                break;
-            case 3:
-                str = "Picked: Spas-12"; //Formátovanie textu
-                obj.GetComponent<Player>().SetWeapon(type, true); //Nastavenie zbrane
-                ShowText(str, 2f, 0); //Zobrazenie textu
-                break;
-        }
+        string str = "Picked: " + weapon.name;
+        weapon.SetWeapon(true); //Nastavenie zbrane
+        ShowText(str, 2f, 0); //Zobrazenie textu
     }
 }

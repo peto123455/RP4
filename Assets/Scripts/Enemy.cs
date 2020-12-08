@@ -24,8 +24,9 @@ public class Enemy : MonoBehaviour
         wl = GetComponent<WeaponList>();
         sounds = GetComponent<Sounds>();
         sound = GetComponent<AudioSource>();
-        wl.glock.ammo = wl.glock.maxMagazine;
-        wl.ak.ammo = wl.ak.maxMagazine;
+        wl.weapons[1].ammo = wl.weapons[1].maxMagazine;
+        wl.weapons[2].ammo = wl.weapons[2].maxMagazine;
+        wl.weapons[3].ammo = wl.weapons[3].maxMagazine;
     }
 
     void Update()
@@ -63,24 +64,24 @@ public class Enemy : MonoBehaviour
         /* GLOCK 21 */
         if (holdingGun == 1 && Time.time > timer)
         {
-            if(CheckAmmo(wl.glock))
+            if(CheckAmmo(wl.weapons[1]))
             {
                 Shoot(1);
                 sounds.PlaySound(0, sound);
-                timer = Time.time + wl.glock.cooldownTime;
+                timer = Time.time + wl.weapons[1].cooldownTime;
             }
-            else ReloadWeapon(wl.glock);
+            else ReloadWeapon(wl.weapons[1]);
         }
         /* AK-47 */
         else if (holdingGun == 2 && Time.time > timer)
         {
-            if(CheckAmmo(wl.ak))
+            if(CheckAmmo(wl.weapons[2]))
             {
                 Shoot(2);
                 sounds.PlaySound(3, sound);
-                timer = Time.time + wl.ak.cooldownTime;
+                timer = Time.time + wl.weapons[2].cooldownTime;
             }
-            else ReloadWeapon(wl.ak);
+            else ReloadWeapon(wl.weapons[2]);
         }
     }
 
@@ -104,12 +105,14 @@ public class Enemy : MonoBehaviour
             case 1:
                 if (Random.Range(0, 10) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(40, true);
                 else bullet.GetComponent<Bullet>().SetBulletDamage(20, false);
-                TakeAmmo(wl.glock);
                 break;
             case 2:
                 if (Random.Range(0, 5) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(50, true);
                 else bullet.GetComponent<Bullet>().SetBulletDamage(25, false);
-                TakeAmmo(wl.ak);
+                break;
+            case 3:
+                if (Random.Range(0, 2) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(60, true);
+                else bullet.GetComponent<Bullet>().SetBulletDamage(40, false);
                 break;
         }
 
