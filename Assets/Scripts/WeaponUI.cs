@@ -38,16 +38,13 @@ public class WeaponUI : MonoBehaviour
                 image.sprite = imageKnife;
                 break;
             case 1:
-                image.sprite = imageGlock;
-                ammoText.text = player.wl.glock.magazine.ToString() + " / " + player.wl.glock.ammo.ToString();
+                ShowWeapon(imageGlock, player.wl.glock.magazine, player.wl.glock.ammo);
                 break;
             case 2:
-                image.sprite = imageAK;
-                ammoText.text = player.wl.ak.magazine.ToString() + " / " + player.wl.ak.ammo.ToString();
+                ShowWeapon(imageAK, player.wl.ak.magazine, player.wl.ak.ammo);
                 break;
             case 3:
-                image.sprite = imageShotgun;
-                ammoText.text = player.wl.shotgun.magazine.ToString() + " / " + player.wl.shotgun.ammo.ToString();
+                ShowWeapon(imageShotgun, player.wl.shotgun.magazine, player.wl.shotgun.ammo);
                 break;
         }
 
@@ -60,5 +57,11 @@ public class WeaponUI : MonoBehaviour
         popupWindow.SetActive(true);
         popupText.text = text;
         popupTime = Time.time + time;
+    }
+
+    public void ShowWeapon(Sprite sprite, int magazine, int ammo)
+    {
+        image.sprite = sprite;
+        ammoText.text = magazine.ToString() + " / " + ammo.ToString();
     }
 }

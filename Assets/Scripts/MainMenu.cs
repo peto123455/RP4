@@ -37,17 +37,17 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("health", 100);
         PlayerPrefs.SetInt("armor", 0);
         /* Náboje */
-        PlayerPrefs.SetInt("ammoGlock", 0);
-        PlayerPrefs.SetInt("ammoAK", 0);
-        PlayerPrefs.SetInt("ammoShotgun", 0);
+        PlayerPrefs.SetInt("ammoGlock-21", 0);
+        PlayerPrefs.SetInt("ammoAK-47", 0);
+        PlayerPrefs.SetInt("ammoSpas-12", 0);
 
-        PlayerPrefs.SetInt("magazineGlock", 0);
-        PlayerPrefs.SetInt("magazineAK", 0);
-        PlayerPrefs.SetInt("magazineShotgun", 0);
+        PlayerPrefs.SetInt("magazineGlock-21", 0);
+        PlayerPrefs.SetInt("magazineAK-47", 0);
+        PlayerPrefs.SetInt("magazineSpas-12", 0);
         /* Zbrane */
-        PlayerPrefs.SetInt("hasGlock", 0); //Nepodporuje bool, takže používam integer
-        PlayerPrefs.SetInt("hasAK", 0);
-        PlayerPrefs.SetInt("hasShotgun", 0);
+        PlayerPrefs.SetInt("hasGlock-21", 0); //Nepodporuje bool, takže používam integer
+        PlayerPrefs.SetInt("hasAK-47", 0);
+        PlayerPrefs.SetInt("hasSpas-12", 0);
     }
 
     public void Continue()

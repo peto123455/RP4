@@ -467,19 +467,18 @@ public class Player : MonoBehaviour
         health = PlayerPrefs.GetInt("health", 100);
         armor = PlayerPrefs.GetInt("armor", 0);
 
-        wl.glock.ammo = PlayerPrefs.GetInt("ammoGlock", 0);
-        wl.ak.ammo = PlayerPrefs.GetInt("ammoAK", 0);
-        wl.shotgun.ammo = PlayerPrefs.GetInt("ammoShotgun", 0);
-
-        wl.glock.magazine = PlayerPrefs.GetInt("magazineGlock", 0);
-        wl.ak.magazine = PlayerPrefs.GetInt("magazineAK", 0);
-        wl.shotgun.magazine = PlayerPrefs.GetInt("magazineShotgun", 0);
-
-        wl.glock.SetWeapon(IntToBool(PlayerPrefs.GetInt("hasGlock", 0)));
-        wl.ak.SetWeapon(IntToBool(PlayerPrefs.GetInt("hasAK", 0)));
-        wl.shotgun.SetWeapon(IntToBool(PlayerPrefs.GetInt("hasShotgun", 0)));
+        LoadWeapon(wl.glock);
+        LoadWeapon(wl.ak);
+        LoadWeapon(wl.shotgun);
 
         currentLevel = PlayerPrefs.GetInt("level", 1);
+    }
+
+    private void LoadWeapon(WeaponList.Weapon weapon)
+    {
+        weapon.ammo = PlayerPrefs.GetInt("ammo" + weapon.name, 0);
+        weapon.magazine = PlayerPrefs.GetInt("magazine" + weapon.name, 0);
+        weapon.SetWeapon(IntToBool(PlayerPrefs.GetInt("has" + weapon.name, 0)));
     }
 
     public void SaveGame()
@@ -487,17 +486,16 @@ public class Player : MonoBehaviour
         PlayerPrefs.SetInt("health", health);
         PlayerPrefs.SetInt("armor", armor);
 
-        PlayerPrefs.SetInt("ammoGlock", wl.glock.ammo);
-        PlayerPrefs.SetInt("ammoAK", wl.ak.ammo);
-        PlayerPrefs.SetInt("ammoShotgun", wl.shotgun.ammo);
+        SaveWeapon(wl.glock);
+        SaveWeapon(wl.ak);
+        SaveWeapon(wl.shotgun);
+    }
 
-        PlayerPrefs.SetInt("magazineGlock", wl.glock.magazine);
-        PlayerPrefs.SetInt("magazineAK", wl.ak.magazine);
-        PlayerPrefs.SetInt("magazineShotgun", wl.shotgun.magazine);
-
-        PlayerPrefs.SetInt("hasGlock", BoolToInt(wl.glock.HasWeapon()));
-        PlayerPrefs.SetInt("hasAK", BoolToInt(wl.ak.HasWeapon()));
-        PlayerPrefs.SetInt("hasShotgun", BoolToInt(wl.shotgun.HasWeapon()));
+    private void SaveWeapon(WeaponList.Weapon weapon)
+    {
+        PlayerPrefs.SetInt("ammo" + weapon.name, weapon.ammo);
+        PlayerPrefs.SetInt("magazine" + weapon.name, weapon.magazine);
+        PlayerPrefs.SetInt("has" + weapon.name, BoolToInt(weapon.HasWeapon()));
     }
 
     private bool IntToBool(int integer)
