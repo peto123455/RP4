@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sounds : MonoBehaviour
 {
+    List<AudioClip> clip;
+
     [SerializeField]
     private AudioClip
         soundHandgun,
@@ -24,23 +26,32 @@ public class Sounds : MonoBehaviour
         soundPickup = (AudioClip) Resources.Load("Assets/Sounds/pickup.mp3");
     }*/
 
-
-    /*private AudioSource soundSource = new AudioSource();
-
-    public void Start()
-    {
-        soundSource = GetComponent<AudioSource>();
-    }*/
-
     public void PlaySound(int id, AudioSource sound)
     {
-        if (id == 0) sound.PlayOneShot(soundHandgun);
+        /*if (id == 0) sound.PlayOneShot(soundHandgun);
         else if (id == 1) sound.PlayOneShot(soundKnife);
         else if (id == 2) sound.PlayOneShot(soundHandgunReload);
         else if (id == 3) sound.PlayOneShot(soundRifle);
         else if (id == 4) sound.PlayOneShot(soundPickup);
         else if (id == 5) sound.PlayOneShot(shotgunReload);
         else if (id == 6) sound.PlayOneShot(shotgunShoot);
-        else if (id == 7) sound.PlayOneShot(shotgunChamber);
+        else if (id == 7) sound.PlayOneShot(shotgunChamber);*/
+
+        sound.PlayOneShot(clip[id]);
+    }
+
+    void Awake()
+    {
+        clip = new List<AudioClip>
+        {
+            soundHandgun,
+            soundKnife,
+            soundHandgunReload,
+            soundRifle,
+            soundPickup,
+            shotgunReload,
+            shotgunShoot,
+            shotgunChamber
+        };
     }
 }
