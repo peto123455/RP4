@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public Animator feet, body;
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
-    public int health, armor, currentLevel; /* Deklaruje zdravie a štít a nastaví na 100 */
+    public int health, armor, currentLevel, money;
     public LayerMask enemyLayer;
     private AudioSource sound = new AudioSource();
 
@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
                         if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
                         {
                             Enemy enemy = checkRay.collider.GetComponent<Enemy>();
-                            enemy.TakeDamage(100, false);
+                            enemy.TakeDamage(100, false, gameObject);
                             sounds.PlaySound(weapon.sound, sound);
                             GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
                             Destroy(hitInstance, 2f);
@@ -187,10 +187,10 @@ public class Player : MonoBehaviour
 
     private void CheckKeys() /* Funkcia, ktorá sa volá 50 krát za sekundu nezávisle od snímkov obrazovky a kontroluje stlačené klávesi */
     {
-        if (Input.GetKey(KeyCode.Alpha1)) SelectItem(0); //Knife
-        else if (Input.GetKey(KeyCode.Alpha2) && GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
-        else if (Input.GetKey(KeyCode.Alpha3) && GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
-        else if (Input.GetKey(KeyCode.Alpha4) && GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectItem(0); //Knife
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
 
         if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(GetWeaponByID(holdingItem)); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
@@ -233,39 +233,42 @@ public class Player : MonoBehaviour
 
     private void SelectItem(int item) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
     {
-        // Zbrane: 0:Knife 1:Glock-21
+        if(item < 100 && holdingItem != item) sounds.PlaySound(wl.weapons[item].drawSound, sound);
         body.SetInteger("item", item); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
         holdingItem = item;
     }
 
     private void CheckPlayerStatus()
     {
-        if(GetSelectedItem() == 1 && !GetWeaponByID(1).HasWeapon()) SelectItem(0); /* Ak nemá glock, dá mu ho preč z ruky */
+        if(GetSelectedItem() == 1 && !GetWeaponByID(1).HasWeapon()) SelectItem(0);
         else if (GetSelectedItem() == 2 && !GetWeaponByID(2).HasWeapon()) SelectItem(0);
         else if (GetSelectedItem() == 3 && !GetWeaponByID(3).HasWeapon()) SelectItem(0);
     }
 
     void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
-        GameObject bullet = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
+        GameObject bulletPrefab = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
+
+        Bullet bullet = bulletPrefab.GetComponent<Bullet>();
+        bullet.SetShooter(gameObject);
 
         switch (weapon.bulletType)
         {
             case 1:
                 if (Random.Range(0, 10) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(40, true);
-                else bullet.GetComponent<Bullet>().SetBulletDamage(20, false);
+                else bullet.SetBulletDamage(20, false);
                 break;
             case 2:
                 if (Random.Range(0, 5) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(50, true);
-                else bullet.GetComponent<Bullet>().SetBulletDamage(25, false);
+                else bullet.SetBulletDamage(25, false);
                 break;
             case 3:
                 if (Random.Range(0, 2) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(60, true);
-                else bullet.GetComponent<Bullet>().SetBulletDamage(40, false);
+                else bullet.SetBulletDamage(40, false);
                 break;
         }
 
-        Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
+        Rigidbody2D rbBullet = bulletPrefab.GetComponent<Rigidbody2D>();
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
 
@@ -277,6 +280,7 @@ public class Player : MonoBehaviour
         {
             if(weapon == GetWeaponByID(3))
             {
+                if(weapon.ammo <= 0) return;
                 weapon.SetCooldown(weapon.cooldownReload);
                 weapon.ReloadByOne();
                 sounds.PlaySound(5, sound);
@@ -315,7 +319,7 @@ public class Player : MonoBehaviour
         if(holdingItem == 3) ReloadGun(GetWeaponByID(holdingItem));
     }
 
-    public void TakeDamage(int damage, bool critical) /* Funkcia, ktorá odobere hráčovi životy */
+    public void TakeDamage(int damage, bool critical, GameObject shotBy = null) /* Funkcia, ktorá odobere hráčovi životy */
     {
         int tmp;
         if (!critical) tmp = 2;
@@ -400,6 +404,21 @@ public class Player : MonoBehaviour
         this.armor = armor;
     }
 
+    public void GiveMoney(int money)
+    {
+        this.money += money;
+    }
+
+    public void SetMoney(int money)
+    {
+        this.money = money;
+    }
+
+    public void TakeMoney(int money)
+    {
+        this.money = money;
+    }
+    /////////////////////////////////////////////
     private void OnDeath()
     {
         menu.ShowDeathMenu();
@@ -443,6 +462,7 @@ public class Player : MonoBehaviour
     {
         health = PlayerPrefs.GetInt("health", 100);
         armor = PlayerPrefs.GetInt("armor", 0);
+        money = PlayerPrefs.GetInt("money", 0);
 
         for(int i = 1; i < WEAPONS_COUNT; ++i)
         {
@@ -463,6 +483,7 @@ public class Player : MonoBehaviour
     {
         PlayerPrefs.SetInt("health", health);
         PlayerPrefs.SetInt("armor", armor);
+        PlayerPrefs.SetInt("money", armor);
 
         for(int i = 1; i < WEAPONS_COUNT; ++i)
         {

@@ -10,7 +10,7 @@ public class WeaponList : MonoBehaviour
         public string name; // Meno zbrane
         public int sound;
         public float cooldownTime, cooldownReload; // Cooldowny
-        public int id, maxMagazine, magazine, bulletType;
+        public int id, maxMagazine, magazine, bulletType, drawSound;
         public int ammo = 0;
         public float cooldown = 0;
         public bool isCooldown = false;
@@ -18,11 +18,12 @@ public class WeaponList : MonoBehaviour
         public bool playerIgnoreCooldown = false;
         public string shootAnimationName, reloadAnimationName;
 
-        public Weapon(int id, string name, int sound, int bulletType, float cooldownTime, float cooldownReload, int maxMagazine, bool playerIgnoreCooldown, string shootAnimationName, string reloadAnimationName = "") //Konštruktor
+        public Weapon(int id, string name, int sound, int drawSound, int bulletType, float cooldownTime, float cooldownReload, int maxMagazine, bool playerIgnoreCooldown, string shootAnimationName, string reloadAnimationName = "") //Konštruktor
         {
             this.id = id;
             this.name = name;
             this.sound = sound;
+            this.drawSound = drawSound;
             this.bulletType = bulletType;
             this.maxMagazine = maxMagazine;
             this.cooldownTime = cooldownTime;
@@ -87,9 +88,9 @@ public class WeaponList : MonoBehaviour
 
     public List<Weapon> weapons = new List<Weapon>
     {
-        new Weapon(0, "Knife",      1, 0, 0.5f, 0f, 0, false, "Player_knife_attack"),
-        new Weapon(1, "Glock-21",   0, 1, 0.2f, 1f, 13, true, "Player_handgun_shoot", "Player_handgun_reload"),
-        new Weapon(2, "AK-47",      3, 2, 0.1f, 1f, 30, false, "Player_rifle_shoot", "Player_rifle_reload"),
-        new Weapon(3, "Spas-12",    6, 3, 0.7f, 0.65f, 8, true, "Player_shotgun_shoot", "Player_shotgun_reload")
+        new Weapon(0, "Knife",      1, 8, 0, 0.5f, 0f, 0, false, "Player_knife_attack"),
+        new Weapon(1, "Glock-21",   0, 9, 1, 0.2f, 1f, 13, true, "Player_handgun_shoot", "Player_handgun_reload"),
+        new Weapon(2, "AK-47",      3, 9, 2, 0.1f, 1f, 30, false, "Player_rifle_shoot", "Player_rifle_reload"),
+        new Weapon(3, "Spas-12",    6, 9, 3, 0.7f, 0.65f, 8, true, "Player_shotgun_shoot", "Player_shotgun_reload")
     }; //Tu vytváram zbrane a vkladám ich do zoznamu
 }

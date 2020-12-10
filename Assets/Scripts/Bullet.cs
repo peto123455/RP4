@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     public GameObject blood;
     private int damage = 20;
     private bool critical = false;
+    GameObject shooter;
 
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -14,7 +15,7 @@ public class Bullet : MonoBehaviour
         if(collision.collider.tag == "Enemy")
         {
             Enemy enemy = collision.collider.GetComponent<Enemy>();
-            enemy.TakeDamage(damage, critical); ;
+            enemy.TakeDamage(damage, critical, shooter);
 
             GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
             Destroy(bloodInstance, 2f);
@@ -22,7 +23,7 @@ public class Bullet : MonoBehaviour
         else if(collision.collider.tag == "Player")
         {
             Player player = collision.collider.GetComponent<Player>();
-            player.TakeDamage(damage/3, critical);
+            player.TakeDamage(damage/3, critical, shooter);
 
             GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
             Destroy(bloodInstance, 2f);
@@ -36,4 +37,13 @@ public class Bullet : MonoBehaviour
         this.critical = critical;
     }
 
+    public GameObject GetShooter()
+    {
+        return shooter;
+    }
+
+    public void SetShooter(GameObject shooter)
+    {
+        this.shooter = shooter;
+    }
 }

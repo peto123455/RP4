@@ -36,6 +36,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("level", 1);
         PlayerPrefs.SetInt("health", 100);
         PlayerPrefs.SetInt("armor", 0);
+        PlayerPrefs.SetInt("money", 0);
         /* Náboje */
         PlayerPrefs.SetInt("ammoGlock-21", 0);
         PlayerPrefs.SetInt("ammoAK-47", 0);

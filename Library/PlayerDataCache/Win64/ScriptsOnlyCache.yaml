@@ -75,11 +75,8 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnimatorStateTransitionInspector
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -515,7 +512,7 @@ ScriptsOnlyBuild:
     className: TMP_Dropdown
   - hash:
       serializedVersion: 2
-      Hash: c4281ab0cd8b53fed2971b2ce1078e09
+      Hash: 79f60f10b75883251dda4266e60a9245
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WeaponUI
@@ -1031,7 +1028,7 @@ ScriptsOnlyBuild:
     className: FloatingScript
   - hash:
       serializedVersion: 2
-      Hash: 1f8d869862facb6fe0be823b55f013a0
+      Hash: da5246285b6d615adc3ccca5b7e67d24
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -1331,7 +1328,7 @@ ScriptsOnlyBuild:
     className: VertexShakeB
   - hash:
       serializedVersion: 2
-      Hash: 3241e72b12f83cdffddf151ea1c0b245
+      Hash: c9ec0fdd7c73b238b1b4d64272c4c1a9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Sounds

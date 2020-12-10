@@ -100,6 +100,8 @@ public class Enemy : MonoBehaviour
     {
         GameObject bullet = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
 
+        bullet.GetComponent<Bullet>().SetShooter(gameObject);
+
         switch (type)
         {
             case 1:
@@ -126,7 +128,7 @@ public class Enemy : MonoBehaviour
         if(weapon.ammo < 0) weapon.ammo = 0;
     }
 
-    public void TakeDamage(int damage, bool critical) //Funkcia, ktorá po zavolaní poškodí nepriateľa
+    public void TakeDamage(int damage, bool critical, GameObject shotBy = null) //Funkcia, ktorá po zavolaní poškodí nepriateľa
     {
         int tmp; //Pomocná premenná na zistenie, či bolo poškodenie kritické
         if (!critical) tmp = 2; //Žltá
@@ -135,7 +137,11 @@ public class Enemy : MonoBehaviour
         health -= damage; //Zoberie hráčovi životy
         GameObject text = Instantiate(floatingText, transform.position, Quaternion.identity); //Vytvorí text v hre
         text.GetComponent<FloatingScript>().SetText(damage.ToString(), 0.5f, tmp); //A nastaví text na damage
-        if (health <= 0) OnDeath(); //Ak má nepriateľ životy menej alebo rovné 0 vykoná sa funkcia OnDeath()
+        if (health <= 0)
+        {
+            if (shotBy != null && shotBy.tag == "Player") shotBy.GetComponent<Player>().GiveMoney(10); 
+            OnDeath(); //Ak má nepriateľ životy menej alebo rovné 0 vykoná sa funkcia OnDeath()
+        }
     }
 
     private void OnDeath() //Funkcia vykonaná pri smrti

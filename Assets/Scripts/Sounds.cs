@@ -15,7 +15,9 @@ public class Sounds : MonoBehaviour
         soundPickup,
         shotgunReload,
         shotgunShoot,
-        shotgunChamber;
+        shotgunChamber,
+        knifeDraw,
+        gunDraw;
 
     /*void Awake()
     {
@@ -44,14 +46,16 @@ public class Sounds : MonoBehaviour
     {
         clip = new List<AudioClip>
         {
-            soundHandgun,
-            soundKnife,
-            soundHandgunReload,
-            soundRifle,
-            soundPickup,
-            shotgunReload,
-            shotgunShoot,
-            shotgunChamber
+            soundHandgun,       //0
+            soundKnife,         //1
+            soundHandgunReload, //2
+            soundRifle,         //3
+            soundPickup,        //4
+            shotgunReload,      //5
+            shotgunShoot,       //6
+            shotgunChamber,     //7
+            knifeDraw,          //8
+            gunDraw             //9
         };
     }
 }

@@ -7,7 +7,7 @@ public class WeaponUI : MonoBehaviour
 {
     [SerializeField] private Sprite imageKnife, imageGlock, imageAK, imageShotgun;
     [SerializeField] private Image image;
-    [SerializeField] private Text ammoText, healthText, shieldText, levelText, popupText;
+    [SerializeField] private Text ammoText, healthText, shieldText, levelText, popupText, moneyText;
     [SerializeField] private Slider healthbar, shieldbar;
     [SerializeField] private GameObject popupWindow;
 
@@ -44,6 +44,8 @@ public class WeaponUI : MonoBehaviour
         //Štít
         shieldbar.value = player.armor;
         shieldText.text = player.armor.ToString();
+        //Peniaze
+        moneyText.text = player.money.ToString();
         //Zbrane
         WeaponList.Weapon weapon = player.GetHoldingWeapon();
         if(weapon.id == 0)
