@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-
-    const int WEAPONS_COUNT = 4;
-
     private enum ControlState
     {
         Player,
@@ -25,7 +22,7 @@ public class Player : MonoBehaviour
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
     public int currentLevel, money;
-    public LayerMask enemyLayer;
+    public LayerMask enemyLayer, collisionLayer;
     private AudioSource sound = new AudioSource();
 
     //public Ammo knife = new Ammo(0, 0); /* Slúži len na zistovanie cooldownu na nožíku */
@@ -154,98 +151,22 @@ public class Player : MonoBehaviour
                     }
                     else if(weapon.magazine > 0)
                     {
-                        weapon.SetCooldown(weapon.cooldownTime);
-                        Shoot(weapon);
-                        weapon.magazine -= 1;
-                        sounds.PlaySound(weapon.sound, sound);
-                        body.Play(weapon.shootAnimationName);
+                        Vector2 rayDirection = MathFunctions.InvertVector(mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y));
+
+                        RaycastHit2D checkRay = Physics2D.Raycast(firePoint.transform.position, rayDirection, 1f, collisionLayer); //Slúži na detekciu, či hráč sa nepokúša strielať cez stenu
+                        if(checkRay.collider == null)
+                        {
+                            weapon.SetCooldown(weapon.cooldownTime);
+                            Shoot(weapon);
+                            weapon.magazine -= 1;
+                            sounds.PlaySound(weapon.sound, sound);
+                            body.Play(weapon.shootAnimationName);
+                        }
                     }
                     else if (weapon.ammo > 0) ReloadGun(weapon);
                 }
             }
         }
-    }
-
-    private void UpdateCooldowns()
-    {
-        for(byte i = 0; i < WEAPONS_COUNT; ++i)
-        {
-            UpdateCooldown(GetWeaponByID(i));
-        }
-    }
-
-    private void UpdateCooldown(WeaponList.Weapon weapon)
-    {
-        if (weapon.isCooldown)
-        {
-            weapon.cooldown -= Time.deltaTime;
-
-            if (weapon.cooldown <= 0)
-            {
-                weapon.cooldown = 0;
-                weapon.isCooldown = false;
-            }
-        }
-    }
-
-    private void CheckKeys() /* Funkcia, ktorá sa volá 50 krát za sekundu nezávisle od snímkov obrazovky a kontroluje stlačené klávesi */
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectItem(0); //Knife
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
-
-        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(GetWeaponByID(holdingItem)); //Reload
-        else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
-    }
-
-    private void UniversalKeys()
-    {
-        if(Input.GetKeyDown(KeyCode.Q)) GadgetControl(); 
-    }
-
-    private void GadgetSpawn()
-    {
-        if (gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget)
-        {
-            if(!gadgets.equippedGadget.isSpawned)
-            {
-                gadget = Instantiate(gadgets.equippedGadget.prefab, gameObject.transform.position, Quaternion.identity);
-                gadgets.equippedGadget.isSpawned = true;
-                StartGadgetTimer(30f);
-            }
-            else if(Vector2.Distance(gameObject.transform.position, gadget.transform.position) < 2f)
-            {
-                gadget.GetComponent<RC>().DestroyRC();
-                gadgets.equippedGadget.isSpawned = false;
-                StopGadgetTimer();
-            }
-        }
-    }
-
-    private void GadgetControl()
-    {
-        if(gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget && gadgets.equippedGadget.isSpawned)
-        {
-            /*if(controlState == ControlState.Player) controlState = ControlState.Gadget;
-            else controlState = ControlState.Player;*/
-            controlState = controlState == ControlState.Player ? ControlState.Gadget : ControlState.Player;
-        }
-        else controlState = ControlState.Player;
-    }
-
-    private void SelectItem(int item) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
-    {
-        if(item < 100 && holdingItem != item) sounds.PlaySound(wl.weapons[item].drawSound, sound);
-        body.SetInteger("item", item); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
-        holdingItem = item;
-    }
-
-    private void CheckPlayerStatus()
-    {
-        if(GetSelectedItem() == 1 && !GetWeaponByID(1).HasWeapon()) SelectItem(0);
-        else if (GetSelectedItem() == 2 && !GetWeaponByID(2).HasWeapon()) SelectItem(0);
-        else if (GetSelectedItem() == 3 && !GetWeaponByID(3).HasWeapon()) SelectItem(0);
     }
 
     void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
@@ -308,18 +229,100 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator DelayedSound(float delay, int sound)
+    IEnumerator DelayedSound(float delay, int sound) //Slúži na prehratie zvuku s oneskorením
     {
         yield return new WaitForSeconds(delay);
 
         sounds.PlaySound(sound, this.sound);
     }
 
-    IEnumerator ShotgunReload()
+    IEnumerator ShotgunReload() //Slúži na opakované vloženie náboja do brokovnice, sa podmienky, že stále zbraň drží
     {
         yield return new WaitForSeconds(0.75f);
 
         if(holdingItem == 3) ReloadGun(GetWeaponByID(holdingItem));
+    }
+
+    private void UpdateCooldowns()
+    {
+        for(byte i = 0; i < GlobalValues.WEAPONS_COUNT; ++i)
+        {
+            UpdateCooldown(GetWeaponByID(i));
+        }
+    }
+
+    private void UpdateCooldown(WeaponList.Weapon weapon)
+    {
+        if (weapon.isCooldown)
+        {
+            weapon.cooldown -= Time.deltaTime;
+
+            if (weapon.cooldown <= 0)
+            {
+                weapon.cooldown = 0;
+                weapon.isCooldown = false;
+            }
+        }
+    }
+
+    private void CheckKeys() //Funkcia na kontrolui kláves ak hráč ovláda postavu
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectItem(0); //Knife
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
+
+        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(GetWeaponByID(holdingItem)); //Reload
+        else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
+    }
+
+    private void UniversalKeys() //Klávesi, ktoé funguje v oboch režimoch ovládania
+    {
+        if(Input.GetKeyDown(KeyCode.Q)) GadgetControl(); 
+    }
+
+    private void GadgetControl()
+    {
+        if(gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget && gadgets.equippedGadget.isSpawned)
+        {
+            /*if(controlState == ControlState.Player) controlState = ControlState.Gadget;
+            else controlState = ControlState.Player;*/
+            controlState = controlState == ControlState.Player ? ControlState.Gadget : ControlState.Player;
+        }
+        else controlState = ControlState.Player;
+    }
+
+    private void GadgetSpawn()
+    {
+        if (gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget)
+        {
+            if(!gadgets.equippedGadget.isSpawned)
+            {
+                gadget = Instantiate(gadgets.equippedGadget.prefab, gameObject.transform.position, Quaternion.identity);
+                gadgets.equippedGadget.isSpawned = true;
+                StartGadgetTimer(30f);
+            }
+            else if(Vector2.Distance(gameObject.transform.position, gadget.transform.position) < 2f)
+            {
+                gadget.GetComponent<RC>().DestroyRC();
+                gadgets.equippedGadget.isSpawned = false;
+                StopGadgetTimer();
+            }
+        }
+    }
+
+    private void SelectItem(int item) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
+    {
+        if(item < 100 && holdingItem != item) sounds.PlaySound(wl.weapons[item].drawSound, sound);
+        body.SetInteger("item", item); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
+        holdingItem = item;
+    }
+
+    private void CheckPlayerStatus()
+    {
+        if(GetSelectedItem() == 1 && !GetWeaponByID(1).HasWeapon()) SelectItem(0);
+        else if (GetSelectedItem() == 2 && !GetWeaponByID(2).HasWeapon()) SelectItem(0);
+        else if (GetSelectedItem() == 3 && !GetWeaponByID(3).HasWeapon()) SelectItem(0);
     }
 
     /*public void TakeDamage(int damage, bool critical, GameObject shotBy = null) /* Funkcia, ktorá odobere hráčovi životy */
@@ -387,26 +390,6 @@ public class Player : MonoBehaviour
         return holdingItem;
     }
 
-    /*public int GetHealth()
-    {
-        return health;
-    }
-
-    public void SetHealth(int health)
-    {
-        this.health = health;
-    }
-
-    public int GetArmor()
-    {
-        return armor;
-    }
-
-    public void SetArmor(int armor)
-    {
-        this.armor = armor;
-    }*/
-
     public void GiveMoney(int money)
     {
         this.money += money;
@@ -461,13 +444,17 @@ public class Player : MonoBehaviour
         GadgetControl();
     }
 
+    ///////////////////////////
+    // Ukladanie a načítanie //
+    ///////////////////////////
+
     public void LoadSave()
     {
         healthSystem.SetHealth(PlayerPrefs.GetInt("health", 100));
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         money = PlayerPrefs.GetInt("money", 0);
 
-        for(int i = 1; i < WEAPONS_COUNT; ++i)
+        for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
             LoadWeapon(GetWeaponByID(i));
         }
@@ -488,7 +475,7 @@ public class Player : MonoBehaviour
         PlayerPrefs.SetInt("armor", healthSystem.GetArmor());
         PlayerPrefs.SetInt("money", money);
 
-        for(int i = 1; i < WEAPONS_COUNT; ++i)
+        for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
             SaveWeapon(GetWeaponByID(i));
         }

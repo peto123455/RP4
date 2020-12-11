@@ -48,7 +48,7 @@ public class WeaponList : MonoBehaviour
             }
         }
 
-        public void ReloadByOne()
+        public void ReloadByOne() //Slúži na nabíjanie po jednom náboji, určené pre nabíjanie brokovnice
         {
             if(ammo > 0 && magazine < this.maxMagazine)
             {
@@ -81,6 +81,11 @@ public class WeaponList : MonoBehaviour
         public int GetID()
         {
             return this.id;
+        }
+
+        public int GetMagazine()
+        {
+            return this.magazine;
         }
 
     }

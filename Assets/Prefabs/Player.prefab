@@ -171,6 +171,9 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 512
   wl: {fileID: 0}
   healthSystem: {fileID: 0}
 --- !u!50 &2382770942122379489
@@ -513,7 +516,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2382770943505535024}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.541, y: 0.341, z: 0}
+  m_LocalPosition: {x: 0.541, y: 1.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2382770942122379492}

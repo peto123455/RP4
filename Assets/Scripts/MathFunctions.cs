@@ -39,4 +39,9 @@ public static class MathFunctions //Trieda v ktorej mám funkcie na rôzne prevo
 
         return angle;
     }
+
+    public static Vector2 InvertVector(Vector2 vector)
+    {
+        return new Vector2(-vector.x, -vector.y);
+    }
 }

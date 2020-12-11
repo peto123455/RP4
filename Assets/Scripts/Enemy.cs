@@ -26,9 +26,10 @@ public class Enemy : MonoBehaviour
         sounds = GetComponent<Sounds>();
         sound = GetComponent<AudioSource>();
         healthSystem = GetComponent<HealthSystem>();
-        wl.weapons[1].ammo = wl.weapons[1].maxMagazine;
-        wl.weapons[2].ammo = wl.weapons[2].maxMagazine;
-        wl.weapons[3].ammo = wl.weapons[3].maxMagazine;
+        for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
+        {
+            wl.weapons[i].magazine = wl.weapons[i].maxMagazine;
+        }
     }
 
     void Update()
@@ -63,39 +64,23 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
-        /* GLOCK 21 */
-        if (holdingGun == 1 && Time.time > timer)
+        if (Time.time > timer)
         {
-            if(CheckAmmo(wl.weapons[1]))
+            if(wl.weapons[holdingGun].GetMagazine() > 0)
             {
-                Shoot(1);
-                sounds.PlaySound(0, sound);
-                timer = Time.time + wl.weapons[1].cooldownTime;
+                Shoot(wl.weapons[holdingGun].bulletType);
+                TakeAmmo(wl.weapons[holdingGun], 1);
+                sounds.PlaySound(wl.weapons[holdingGun].sound, sound);
+                timer = Time.time + wl.weapons[holdingGun].cooldownTime;
             }
-            else ReloadWeapon(wl.weapons[1]);
+            else ReloadWeapon(wl.weapons[holdingGun]);
         }
-        /* AK-47 */
-        else if (holdingGun == 2 && Time.time > timer)
-        {
-            if(CheckAmmo(wl.weapons[2]))
-            {
-                Shoot(2);
-                sounds.PlaySound(3, sound);
-                timer = Time.time + wl.weapons[2].cooldownTime;
-            }
-            else ReloadWeapon(wl.weapons[2]);
-        }
-    }
-
-    private bool CheckAmmo(WeaponList.Weapon weapon)
-    {
-        return (weapon.ammo > 0);
     }
 
     private void ReloadWeapon(WeaponList.Weapon weapon)
     {
-        timer = Time.time + weapon.cooldownReload;
-        weapon.ammo = weapon.maxMagazine;
+        timer = Time.time + weapon.cooldownReload * 2;
+        weapon.magazine = weapon.maxMagazine;
     }
 
     private void Shoot(int type) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
@@ -126,25 +111,9 @@ public class Enemy : MonoBehaviour
 
     private void TakeAmmo(WeaponList.Weapon weapon, int amount = 1)
     {
-        weapon.ammo -= amount;
-        if(weapon.ammo < 0) weapon.ammo = 0;
+        weapon.magazine -= amount;
+        if(weapon.magazine < 0) weapon.magazine = 0;
     }
-
-    /*public void TakeDamage(int damage, bool critical, GameObject shotBy = null) //Funkcia, ktorá po zavolaní poškodí nepriateľa
-    {
-        int tmp; //Pomocná premenná na zistenie, či bolo poškodenie kritické
-        if (!critical) tmp = 2; //Žltá
-        else tmp = 1; //Červená
-
-        health -= damage; //Zoberie hráčovi životy
-        GameObject text = Instantiate(floatingText, transform.position, Quaternion.identity); //Vytvorí text v hre
-        text.GetComponent<FloatingScript>().SetText(damage.ToString(), 0.5f, tmp); //A nastaví text na damage
-        if (health <= 0)
-        {
-            if (shotBy != null && shotBy.tag == "Player") shotBy.GetComponent<Player>().GiveMoney(10); 
-            OnDeath(); //Ak má nepriateľ životy menej alebo rovné 0 vykoná sa funkcia OnDeath()
-        }
-    }*/
 
     public void OnDeath() //Funkcia vykonaná pri smrti
     {
