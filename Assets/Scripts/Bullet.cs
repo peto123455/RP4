@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
         if(collision.collider.tag == "Enemy")
         {
             Enemy enemy = collision.collider.GetComponent<Enemy>();
-            enemy.TakeDamage(damage, critical, shooter);
+            enemy.healthSystem.TakeDamage(damage, critical, shooter);
 
             GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
             Destroy(bloodInstance, 2f);
@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour
         else if(collision.collider.tag == "Player")
         {
             Player player = collision.collider.GetComponent<Player>();
-            player.TakeDamage(damage/3, critical, shooter);
+            player.healthSystem.TakeDamage(damage/3, critical, shooter);
 
             GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
             Destroy(bloodInstance, 2f);

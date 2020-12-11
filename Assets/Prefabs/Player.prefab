@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 2382770942122379484}
   - component: {fileID: -8456191915761850580}
   - component: {fileID: 2942035270510672958}
+  - component: {fileID: 2899962274286425272}
   m_Layer: 14
   m_Name: Player
   m_TagString: Player
@@ -165,14 +166,13 @@ MonoBehaviour:
   bulletPistol: {fileID: 8096667389396802919, guid: 3a65b8cd5e7e14147a07906badde7961, type: 3}
   hitEffect: {fileID: 6272921440037399043, guid: e0dc7fd09395b2c44adb93bc7df67cf8, type: 3}
   floatingText: {fileID: 2714142670091362340, guid: d9dadd144badbf842afcc3a71c230658, type: 3}
-  health: 100
-  armor: 0
   currentLevel: 0
   money: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
   wl: {fileID: 0}
+  healthSystem: {fileID: 0}
 --- !u!50 &2382770942122379489
 Rigidbody2D:
   serializedVersion: 4
@@ -372,6 +372,21 @@ CircleCollider2D:
   m_Offset: {x: 0.09407735, y: -0.29352117}
   serializedVersion: 2
   m_Radius: 0.57902455
+--- !u!114 &2899962274286425272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382770942122379483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53076881bf4de62439fbc7ac7cdf60d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  armor: 0
+  floatingText: {fileID: 2714142670091362340, guid: d9dadd144badbf842afcc3a71c230658, type: 3}
 --- !u!1 &2382770943372008388
 GameObject:
   m_ObjectHideFlags: 0

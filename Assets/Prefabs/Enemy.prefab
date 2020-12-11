@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 8988140897170128180}
   - component: {fileID: 2782408496537180758}
   - component: {fileID: 5823056245826697507}
+  - component: {fileID: 2412659077274733704}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
@@ -140,6 +141,7 @@ MonoBehaviour:
     m_Bits: 16896
   firePoint: {fileID: 6788821313082016428}
   bulletPistol: {fileID: 8096667389396802919, guid: 3a65b8cd5e7e14147a07906badde7961, type: 3}
+  healthSystem: {fileID: 0}
 --- !u!95 &2008589082882136273
 Animator:
   serializedVersion: 3
@@ -188,6 +190,11 @@ MonoBehaviour:
   soundHandgunReload: {fileID: 8300000, guid: be59e56853d532d4092f69a1b2c42681, type: 3}
   soundRifle: {fileID: 8300000, guid: 443e633778710da4cb16881a31004c4b, type: 3}
   soundPickup: {fileID: 8300000, guid: 14bce16ed31f1724e8c805b78e1b2768, type: 3}
+  shotgunReload: {fileID: 0}
+  shotgunShoot: {fileID: 0}
+  shotgunChamber: {fileID: 0}
+  knifeDraw: {fileID: 0}
+  gunDraw: {fileID: 0}
 --- !u!114 &8988140897170128180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,3 +366,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2412659077274733704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7211625179603282523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53076881bf4de62439fbc7ac7cdf60d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  armor: 0
+  floatingText: {fileID: 2714142670091362340, guid: d9dadd144badbf842afcc3a71c230658, type: 3}

@@ -9,13 +9,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPistol;
-    private int health = 100;
+    //private int health = 100;
     private float fov;
     private float timer = 0;
     private float viewDistance, startingAngle;
     private WeaponList wl;
     private Sounds sounds;
     private AudioSource sound;
+    public HealthSystem healthSystem;
 
     void Awake()
     {
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
         wl = GetComponent<WeaponList>();
         sounds = GetComponent<Sounds>();
         sound = GetComponent<AudioSource>();
+        healthSystem = GetComponent<HealthSystem>();
         wl.weapons[1].ammo = wl.weapons[1].maxMagazine;
         wl.weapons[2].ammo = wl.weapons[2].maxMagazine;
         wl.weapons[3].ammo = wl.weapons[3].maxMagazine;
@@ -44,7 +46,7 @@ public class Enemy : MonoBehaviour
 
         for (int i = 0; i <= rayCount; i++)
         {
-            RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, AngleToVector(angle), viewDistance, layerMask);
+            RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle), viewDistance, layerMask);
             if (ray.collider != null && ray.collider.tag == "Player")
             {
                 float playerAngle = Mathf.Atan2(ray.collider.transform.position.x - gameObject.transform.position.x, ray.collider.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
@@ -128,7 +130,7 @@ public class Enemy : MonoBehaviour
         if(weapon.ammo < 0) weapon.ammo = 0;
     }
 
-    public void TakeDamage(int damage, bool critical, GameObject shotBy = null) //Funkcia, ktorá po zavolaní poškodí nepriateľa
+    /*public void TakeDamage(int damage, bool critical, GameObject shotBy = null) //Funkcia, ktorá po zavolaní poškodí nepriateľa
     {
         int tmp; //Pomocná premenná na zistenie, či bolo poškodenie kritické
         if (!critical) tmp = 2; //Žltá
@@ -142,39 +144,13 @@ public class Enemy : MonoBehaviour
             if (shotBy != null && shotBy.tag == "Player") shotBy.GetComponent<Player>().GiveMoney(10); 
             OnDeath(); //Ak má nepriateľ životy menej alebo rovné 0 vykoná sa funkcia OnDeath()
         }
-    }
+    }*/
 
-    private void OnDeath() //Funkcia vykonaná pri smrti
+    public void OnDeath() //Funkcia vykonaná pri smrti
     {
         GameObject gun = Instantiate(gunPrefab, transform.position, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
         gun.GetComponent<PickupScript>().SetItem(holdingGun, 13);
         Destroy(gameObject); //Zničenie objektu nepriateľa
-    }
-
-    private Vector3 AngleToVector(float angle) //Funkcia, ktorá prepočíta Uhol na Vektor
-    {
-        float angleRad = angle * (Mathf.PI / 180f); //Prevenie stupne na radiany
-        return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad)); 
-    }
-
-    private float VectorToAngle(Vector3 direction)
-    {
-        direction.Normalize();
-        float n = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-        if (n < 0) n += 360;
-
-        return n;
-    }
-
-    private float SimplifyAngle(float angle)
-    {
-        while(angle < 0 || angle > 360)
-        {
-            if(angle < 0) angle += 360;
-            else angle -= 360;
-        }
-
-        return angle;
     }
 
     public void SetDirection(float aimDirection) //Funkcia slúžiaca na nastavenie rotácie FOV

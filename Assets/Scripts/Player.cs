@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public Animator feet, body;
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
-    public int health, armor, currentLevel, money;
+    public int currentLevel, money;
     public LayerMask enemyLayer;
     private AudioSource sound = new AudioSource();
 
@@ -43,6 +43,8 @@ public class Player : MonoBehaviour
     private Gadgets gadgets;
     private GameObject gadget;
     private ControlState controlState = ControlState.Player;
+
+    public HealthSystem healthSystem;
 
     private bool hasControl;
 
@@ -67,6 +69,7 @@ public class Player : MonoBehaviour
         sounds = GetComponent<Sounds>();
         sound = GetComponent<AudioSource>();
         gadgets = GetComponent<Gadgets>();
+        healthSystem = GetComponent<HealthSystem>();
 
         gadgets.SetGadget(gadgets.rcCar, true);
         gadgets.EquipGadget(gadgets.rcCar);
@@ -143,7 +146,7 @@ public class Player : MonoBehaviour
                         if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
                         {
                             Enemy enemy = checkRay.collider.GetComponent<Enemy>();
-                            enemy.TakeDamage(100, false, gameObject);
+                            enemy.healthSystem.TakeDamage(100, false, gameObject);
                             sounds.PlaySound(weapon.sound, sound);
                             GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
                             Destroy(hitInstance, 2f);
@@ -319,8 +322,8 @@ public class Player : MonoBehaviour
         if(holdingItem == 3) ReloadGun(GetWeaponByID(holdingItem));
     }
 
-    public void TakeDamage(int damage, bool critical, GameObject shotBy = null) /* Funkcia, ktorá odobere hráčovi životy */
-    {
+    /*public void TakeDamage(int damage, bool critical, GameObject shotBy = null) /* Funkcia, ktorá odobere hráčovi životy */
+    /*{
         int tmp;
         if (!critical) tmp = 2;
         else tmp = 1;
@@ -338,7 +341,7 @@ public class Player : MonoBehaviour
         {
             OnDeath();
         }
-    }
+    }*/
 
     private void Movement()
     {
@@ -384,7 +387,7 @@ public class Player : MonoBehaviour
         return holdingItem;
     }
 
-    public int GetHealth()
+    /*public int GetHealth()
     {
         return health;
     }
@@ -402,7 +405,7 @@ public class Player : MonoBehaviour
     public void SetArmor(int armor)
     {
         this.armor = armor;
-    }
+    }*/
 
     public void GiveMoney(int money)
     {
@@ -419,7 +422,7 @@ public class Player : MonoBehaviour
         this.money = money;
     }
     /////////////////////////////////////////////
-    private void OnDeath()
+    public void OnDeath()
     {
         menu.ShowDeathMenu();
     }
@@ -460,8 +463,8 @@ public class Player : MonoBehaviour
 
     public void LoadSave()
     {
-        health = PlayerPrefs.GetInt("health", 100);
-        armor = PlayerPrefs.GetInt("armor", 0);
+        healthSystem.SetHealth(PlayerPrefs.GetInt("health", 100));
+        healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         money = PlayerPrefs.GetInt("money", 0);
 
         for(int i = 1; i < WEAPONS_COUNT; ++i)
@@ -476,14 +479,14 @@ public class Player : MonoBehaviour
     {
         weapon.ammo = PlayerPrefs.GetInt("ammo" + weapon.name, 0);
         weapon.magazine = PlayerPrefs.GetInt("magazine" + weapon.name, 0);
-        weapon.SetWeapon(IntToBool(PlayerPrefs.GetInt("has" + weapon.name, 0)));
+        weapon.SetWeapon(MathFunctions.IntToBool(PlayerPrefs.GetInt("has" + weapon.name, 0)));
     }
 
     public void SaveGame()
     {
-        PlayerPrefs.SetInt("health", health);
-        PlayerPrefs.SetInt("armor", armor);
-        PlayerPrefs.SetInt("money", armor);
+        PlayerPrefs.SetInt("health", healthSystem.GetHealth());
+        PlayerPrefs.SetInt("armor", healthSystem.GetArmor());
+        PlayerPrefs.SetInt("money", money);
 
         for(int i = 1; i < WEAPONS_COUNT; ++i)
         {
@@ -495,16 +498,6 @@ public class Player : MonoBehaviour
     {
         PlayerPrefs.SetInt("ammo" + weapon.name, weapon.ammo);
         PlayerPrefs.SetInt("magazine" + weapon.name, weapon.magazine);
-        PlayerPrefs.SetInt("has" + weapon.name, BoolToInt(weapon.HasWeapon()));
-    }
-
-    private bool IntToBool(int integer)
-    {
-        return integer == 1;
-    }
-
-    private int BoolToInt(bool boolean)
-    {
-        return boolean ? 1:0;
+        PlayerPrefs.SetInt("has" + weapon.name, MathFunctions.BoolToInt(weapon.HasWeapon()));
     }
 }

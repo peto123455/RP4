@@ -39,11 +39,11 @@ public class WeaponUI : MonoBehaviour
     {
         levelText.text = "Level " + player.currentLevel.ToString();
         //Životy
-        healthbar.value = player.health;
-        healthText.text = player.health.ToString();
+        healthbar.value = player.healthSystem.GetHealth();
+        healthText.text = player.healthSystem.GetHealth().ToString();
         //Štít
-        shieldbar.value = player.armor;
-        shieldText.text = player.armor.ToString();
+        shieldbar.value = player.healthSystem.GetArmor();
+        shieldText.text = player.healthSystem.GetArmor().ToString();
         //Peniaze
         moneyText.text = player.money.ToString();
         //Zbrane

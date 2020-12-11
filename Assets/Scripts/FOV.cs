@@ -40,8 +40,8 @@ public class FOV : MonoBehaviour
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(position, AngleToVector(angle), viewDistance, layerMask); //Vyslanie raya, ktorý bude detekovať kolízie s objektami v zadanej vrstve
-            if (raycastHit2D.collider == null) vertex = position + AngleToVector(angle) * viewDistance;
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(position, MathFunctions.AngleToVector(angle), viewDistance, layerMask); //Vyslanie raya, ktorý bude detekovať kolízie s objektami v zadanej vrstve
+            if (raycastHit2D.collider == null) vertex = position + MathFunctions.AngleToVector(angle) * viewDistance;
             else vertex = raycastHit2D.point;
             vertices[vertexIndex] = vertex;
 
@@ -74,11 +74,5 @@ public class FOV : MonoBehaviour
     public void SetDirection(float aimDirection) //Funkcia slúžiaca na nastavenie rotácie FOV
     {
         startingAngle = -aimDirection + fov / 2f;
-    }
-
-    private Vector3 AngleToVector(float angle) //Funkcia, ktorá prepočíta Uhol na Vektor
-    {
-        float angleRad = angle * (Mathf.PI / 180f); //Prevenie stupne na radiany
-        return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad)); 
     }
 }
