@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     private float timer = 0;
     private float viewDistance, startingAngle;
     private WeaponList wl = new WeaponList();
-    private Sounds sounds;
+    public Sounds sounds;
     private AudioSource sound;
     public HealthSystem healthSystem;
 
@@ -23,7 +23,8 @@ public class Enemy : MonoBehaviour
         fov = 90f;
         viewDistance = 13f;
         //wl = GetComponent<WeaponList>();
-        sounds = GetComponent<Sounds>();
+        //sounds = GetComponent<Sounds>();
+        sounds = new Sounds();
         sound = GetComponent<AudioSource>();
         healthSystem = GetComponent<HealthSystem>();
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)

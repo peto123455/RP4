@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sounds : MonoBehaviour
+public class Sounds
 {
     List<AudioClip> clip;
 
-    [SerializeField]
+    //[SerializeField]
     private AudioClip
         soundHandgun,
         soundKnife,
@@ -19,31 +19,19 @@ public class Sounds : MonoBehaviour
         knifeDraw,
         gunDraw;
 
-    /*void Awake()
+    public Sounds()
     {
-        soundHandgun = (AudioClip) Resources.Load("Assets/Sounds/handgun.mp3");
-        soundKnife = (AudioClip) Resources.Load("Assets/Sounds/stabSound.mp3");
-        soundHandgunReload = (AudioClip) Resources.Load("Assets/Sounds/handgunReload.mp3");
-        soundRifle = (AudioClip) Resources.Load("Assets/Sounds/rifleSound.mp3");
-        soundPickup = (AudioClip) Resources.Load("Assets/Sounds/pickup.mp3");
-    }*/
+        soundHandgun = Resources.Load<AudioClip>("Sounds/handgun");
+        soundKnife = Resources.Load<AudioClip>("Sounds/stabSound");
+        soundHandgunReload = Resources.Load<AudioClip>("Sounds/handgunReload");
+        soundRifle = Resources.Load<AudioClip>("Sounds/rifleSound");
+        soundPickup = Resources.Load<AudioClip>("Sounds/pickup");
+        shotgunReload = Resources.Load<AudioClip>("Sounds/shotgun_oneAmmo");
+        shotgunShoot = Resources.Load<AudioClip>("Sounds/shotgun_shot");
+        shotgunChamber = Resources.Load<AudioClip>("Sounds/shotgun_chamber");
+        knifeDraw = Resources.Load<AudioClip>("Sounds/knife_draw");
+        gunDraw = Resources.Load<AudioClip>("Sounds/gun_draw");
 
-    public void PlaySound(int id, AudioSource sound)
-    {
-        /*if (id == 0) sound.PlayOneShot(soundHandgun);
-        else if (id == 1) sound.PlayOneShot(soundKnife);
-        else if (id == 2) sound.PlayOneShot(soundHandgunReload);
-        else if (id == 3) sound.PlayOneShot(soundRifle);
-        else if (id == 4) sound.PlayOneShot(soundPickup);
-        else if (id == 5) sound.PlayOneShot(shotgunReload);
-        else if (id == 6) sound.PlayOneShot(shotgunShoot);
-        else if (id == 7) sound.PlayOneShot(shotgunChamber);*/
-
-        sound.PlayOneShot(clip[id]);
-    }
-
-    void Awake()
-    {
         clip = new List<AudioClip>
         {
             soundHandgun,       //0
@@ -57,5 +45,19 @@ public class Sounds : MonoBehaviour
             knifeDraw,          //8
             gunDraw             //9
         };
+    }
+
+    public void PlaySound(int id, AudioSource sound)
+    {
+        /*if (id == 0) sound.PlayOneShot(soundHandgun);
+        else if (id == 1) sound.PlayOneShot(soundKnife);
+        else if (id == 2) sound.PlayOneShot(soundHandgunReload);
+        else if (id == 3) sound.PlayOneShot(soundRifle);
+        else if (id == 4) sound.PlayOneShot(soundPickup);
+        else if (id == 5) sound.PlayOneShot(shotgunReload);
+        else if (id == 6) sound.PlayOneShot(shotgunShoot);
+        else if (id == 7) sound.PlayOneShot(shotgunChamber);*/
+
+        sound.PlayOneShot(clip[id]);
     }
 }

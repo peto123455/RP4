@@ -16,9 +16,7 @@ ScriptsOnlyBuild:
     - RC
     - Settings
     - ShowMessageTrigger
-    - Sounds
     - TheEnd
-    - WeaponList
     - WeaponUI
     - gameAuth
     Unity.2D.Animation.Editor.dll:
@@ -56,6 +54,7 @@ ScriptsOnlyBuild:
     - UnityEngine.Rendering.UI.DebugUIHandlerVector4
     - UnityEngine.Rendering.UI.UIFoldout
     Unity.RenderPipelines.Universal.Editor.dll:
+    - UnityEditor.Rendering.Universal.ScriptableRendererFeatureEditor
     - UnityEditor.Rendering.Universal.UniversalProjectSettings
     Unity.RenderPipelines.Universal.Runtime.dll:
     - UnityEngine.Experimental.Rendering.Universal.RenderObjects
@@ -183,8 +182,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 82
       Script: {instanceID: 0}
-    - Class: 83
-      Script: {instanceID: 0}
     - Class: 91
       Script: {instanceID: 0}
     - Class: 95
@@ -222,8 +219,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 13606}
     - Class: 114
-      Script: {instanceID: 13882}
-    - Class: 114
       Script: {instanceID: 14184}
     - Class: 114
       Script: {instanceID: 14772}
@@ -237,8 +232,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 15406}
     - Class: 114
       Script: {instanceID: 15428}
-    - Class: 114
-      Script: {instanceID: 16200}
     - Class: 114
       Script: {instanceID: 16236}
     - Class: 114
@@ -301,6 +294,8 @@ ScriptsOnlyBuild:
     - Class: 49
       Script: {instanceID: 0}
     - Class: 81
+      Script: {instanceID: 0}
+    - Class: 83
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -893,12 +888,6 @@ ScriptsOnlyBuild:
     className: FilmGrain
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: WeaponList
-  - hash:
-      serializedVersion: 2
       Hash: 2cb85097bd451bae61ff71e703256582
     assemblyName: Unity.RenderPipelines.Universal.Runtime.dll
     namespaceName: UnityEngine.Rendering.Universal
@@ -1037,7 +1026,7 @@ ScriptsOnlyBuild:
     className: FloatingScript
   - hash:
       serializedVersion: 2
-      Hash: 4914163499c7ac6f2593f3b63438c3c1
+      Hash: df375ff7ec2d625a12cdfaa93b72f6f9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -1335,12 +1324,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: TMPro.Examples
     className: VertexShakeB
-  - hash:
-      serializedVersion: 2
-      Hash: c9ec0fdd7c73b238b1b4d64272c4c1a9
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Sounds
   - hash:
       serializedVersion: 2
       Hash: 5bb0c23ac2810973880e592724a69354

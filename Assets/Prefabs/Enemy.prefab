@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 7211625179603282503}
   - component: {fileID: 7211625179603282522}
   - component: {fileID: 2008589082882136273}
-  - component: {fileID: 2758157254831749332}
   - component: {fileID: 8988140897170128180}
   - component: {fileID: 2782408496537180758}
   - component: {fileID: 5823056245826697507}
@@ -160,28 +159,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2758157254831749332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7211625179603282523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 528c77fc03179094ea781c1b000cb198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundHandgun: {fileID: 8300000, guid: 36b0d3584f5165a43b5af37716e10670, type: 3}
-  soundKnife: {fileID: 8300000, guid: 6b7fbc874f97d784186481b934d7e4dd, type: 3}
-  soundHandgunReload: {fileID: 8300000, guid: be59e56853d532d4092f69a1b2c42681, type: 3}
-  soundRifle: {fileID: 8300000, guid: 443e633778710da4cb16881a31004c4b, type: 3}
-  soundPickup: {fileID: 8300000, guid: 14bce16ed31f1724e8c805b78e1b2768, type: 3}
-  shotgunReload: {fileID: 0}
-  shotgunShoot: {fileID: 0}
-  shotgunChamber: {fileID: 0}
-  knifeDraw: {fileID: 0}
-  gunDraw: {fileID: 0}
 --- !u!114 &8988140897170128180
 MonoBehaviour:
   m_ObjectHideFlags: 0

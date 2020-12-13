@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
 
     private int holdingItem = 0;
     private Vector2 mouseVec, mousePos;
-    private Sounds sounds;
+    public Sounds sounds;
     private Rigidbody2D rb;
     public WeaponList wl = new WeaponList();
     private Gadgets gadgets;
@@ -63,7 +63,8 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>(); /* Zoberie komponent Rigidbody2D a uloží ho do rb*/
         //wl = GetComponent<WeaponList>();
-        sounds = GetComponent<Sounds>();
+        //sounds = GetComponent<Sounds>();
+        sounds = new Sounds();
         sound = GetComponent<AudioSource>();
         gadgets = GetComponent<Gadgets>();
         healthSystem = GetComponent<HealthSystem>();

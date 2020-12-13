@@ -49,7 +49,7 @@ public class PickupScript : MonoBehaviour
                         str += " shotgun slug rounds";
                         break;
                 }
-                Player.GetComponent<Sounds>().PlaySound(4, Player.GetComponent<AudioSource>()); //Prehrá zvuk
+                Player.GetComponent<Player>().sounds.PlaySound(4, Player.GetComponent<AudioSource>()); //Prehrá zvuk
                 ShowText(str, 1.5f, 0); //Zobrazí text v hre
                 Destroy(gameObject); //Zničí sa
             }
@@ -68,7 +68,7 @@ public class PickupScript : MonoBehaviour
                     {
                         ShowText("Healed", 1.5f, 0);
                         collision.gameObject.GetComponent<HealthSystem>().SetHealth(100);
-                        collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
+                        collision.gameObject.GetComponent<Player>().sounds.PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
                         Destroy(gameObject);
                     }
                 }
@@ -80,7 +80,7 @@ public class PickupScript : MonoBehaviour
                     {
                         ShowText("Armor replenished", 1.5f, 0);
                         collision.gameObject.GetComponent<HealthSystem>().SetArmor(100);
-                        collision.gameObject.GetComponent<Sounds>().PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
+                        collision.gameObject.GetComponent<Player>().sounds.PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
                         Destroy(gameObject);
                     }
                 }
