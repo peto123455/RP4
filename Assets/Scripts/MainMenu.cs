@@ -8,6 +8,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject continueButton;
     private bool isKeyChecked = false;
 
+    private WeaponList wl = new WeaponList();
+
     void Awake()
     {
         if(PlayerPrefs.GetInt("level", 0) == 0) //Zistuje, či už má vytvorenú hru, ak nie, nezobrazí tlačidlo "Continue"
@@ -37,18 +39,17 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("health", 100);
         PlayerPrefs.SetInt("armor", 0);
         PlayerPrefs.SetInt("money", 0);
-        /* Náboje */
-        PlayerPrefs.SetInt("ammoGlock-21", 0);
-        PlayerPrefs.SetInt("ammoAK-47", 0);
-        PlayerPrefs.SetInt("ammoSpas-12", 0);
+        for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
+        {
+            CreateWeaponSave(wl.GetWeaponByID(i));
+        }
+    }
 
-        PlayerPrefs.SetInt("magazineGlock-21", 0);
-        PlayerPrefs.SetInt("magazineAK-47", 0);
-        PlayerPrefs.SetInt("magazineSpas-12", 0);
-        /* Zbrane */
-        PlayerPrefs.SetInt("hasGlock-21", 0); //Nepodporuje bool, takže používam integer
-        PlayerPrefs.SetInt("hasAK-47", 0);
-        PlayerPrefs.SetInt("hasSpas-12", 0);
+    private void CreateWeaponSave(WeaponList.Weapon weapon)
+    {
+        PlayerPrefs.SetInt("ammo" + weapon.id, 0);
+        PlayerPrefs.SetInt("magazine" + weapon.id, 0);
+        PlayerPrefs.SetInt("has" + weapon.id, 0);
     }
 
     public void Continue()

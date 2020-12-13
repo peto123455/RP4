@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponList : MonoBehaviour
+public class WeaponList
 {
 
     public class Weapon
@@ -98,4 +98,9 @@ public class WeaponList : MonoBehaviour
         new Weapon(2, "AK-47",      3, 9, 2, 0.1f, 1f, 30, false, "Player_rifle_shoot", "Player_rifle_reload"),
         new Weapon(3, "Spas-12",    6, 9, 3, 0.7f, 0.65f, 8, true, "Player_shotgun_shoot", "Player_shotgun_reload")
     }; //Tu vytváram zbrane a vkladám ich do zoznamu
+
+    public WeaponList.Weapon GetWeaponByID(int type)
+    {
+        return weapons[type];
+    }
 }

@@ -32,7 +32,7 @@ public class PickupScript : MonoBehaviour
             if(collision.gameObject.tag == "Player")
             {
                 GameObject Player = collision.gameObject;
-                WeaponList.Weapon weapon = Player.GetComponent<Player>().GetWeaponByID(type); 
+                WeaponList.Weapon weapon = Player.GetComponent<Player>().wl.GetWeaponByID(type); 
 
                 weapon.GiveAmmo(amount); //Dá hráčovi náboje
                 if (!weapon.HasWeapon()) GiveWeapon(weapon); //Ak nemá zbraň, tak mu ju dá

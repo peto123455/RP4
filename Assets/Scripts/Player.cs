@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     private Vector2 mouseVec, mousePos;
     private Sounds sounds;
     private Rigidbody2D rb;
-    public WeaponList wl;
+    public WeaponList wl = new WeaponList();
     private Gadgets gadgets;
     private GameObject gadget;
     private ControlState controlState = ControlState.Player;
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
     void Start() /* Funkcia, ktorá sa volá pri spustení skriptu */
     {
         rb = GetComponent<Rigidbody2D>(); /* Zoberie komponent Rigidbody2D a uloží ho do rb*/
-        wl = GetComponent<WeaponList>();
+        //wl = GetComponent<WeaponList>();
         sounds = GetComponent<Sounds>();
         sound = GetComponent<AudioSource>();
         gadgets = GetComponent<Gadgets>();
@@ -132,10 +132,10 @@ public class Player : MonoBehaviour
         {
             if(holdingItem < 100) //Všetky zbrane
             {
-                WeaponList.Weapon weapon = GetWeaponByID(holdingItem);
+                WeaponList.Weapon weapon = wl.GetWeaponByID(holdingItem);
                 if(!weapon.isCooldown && !weapon.playerIgnoreCooldown || weapon.playerIgnoreCooldown && Input.GetButtonDown("Fire1"))
                 {
-                    if(weapon == GetWeaponByID(0))
+                    if(weapon == wl.GetWeaponByID(0))
                     {
                         weapon.SetCooldown(weapon.cooldownTime);
                         body.Play(weapon.shootAnimationName);
@@ -199,10 +199,10 @@ public class Player : MonoBehaviour
     private void ReloadGun(WeaponList.Weapon weapon) /* Funkcia, ktorá prebije zbraň */
     {
 
-        if (weapon == GetWeaponByID(0)) return;
+        if (weapon == wl.GetWeaponByID(0)) return;
         else if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown)
         {
-            if(weapon == GetWeaponByID(3))
+            if(weapon == wl.GetWeaponByID(3))
             {
                 if(weapon.ammo <= 0) return;
                 weapon.SetCooldown(weapon.cooldownReload);
@@ -240,14 +240,14 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.75f);
 
-        if(holdingItem == 3) ReloadGun(GetWeaponByID(holdingItem));
+        if(holdingItem == 3) ReloadGun(wl.GetWeaponByID(holdingItem));
     }
 
     private void UpdateCooldowns()
     {
         for(byte i = 0; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
-            UpdateCooldown(GetWeaponByID(i));
+            UpdateCooldown(wl.GetWeaponByID(i));
         }
     }
 
@@ -268,11 +268,11 @@ public class Player : MonoBehaviour
     private void CheckKeys() //Funkcia na kontrolui kláves ak hráč ovláda postavu
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) SelectItem(0); //Knife
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && wl.GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && wl.GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && wl.GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
 
-        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(GetWeaponByID(holdingItem)); //Reload
+        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(wl.GetWeaponByID(holdingItem)); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
     }
 
@@ -320,9 +320,9 @@ public class Player : MonoBehaviour
 
     private void CheckPlayerStatus()
     {
-        if(GetSelectedItem() == 1 && !GetWeaponByID(1).HasWeapon()) SelectItem(0);
-        else if (GetSelectedItem() == 2 && !GetWeaponByID(2).HasWeapon()) SelectItem(0);
-        else if (GetSelectedItem() == 3 && !GetWeaponByID(3).HasWeapon()) SelectItem(0);
+        if(GetSelectedItem() == 1 && !wl.GetWeaponByID(1).HasWeapon()) SelectItem(0);
+        else if (GetSelectedItem() == 2 && !wl.GetWeaponByID(2).HasWeapon()) SelectItem(0);
+        else if (GetSelectedItem() == 3 && !wl.GetWeaponByID(3).HasWeapon()) SelectItem(0);
     }
 
     /*public void TakeDamage(int damage, bool critical, GameObject shotBy = null) /* Funkcia, ktorá odobere hráčovi životy */
@@ -375,14 +375,9 @@ public class Player : MonoBehaviour
     // FUNKCIE PRE SPRÁVU HRÁČA //
     //////////////////////////////
 
-    public WeaponList.Weapon GetWeaponByID(int type)
-    {
-        return wl.weapons[type];
-    }
-
     public WeaponList.Weapon GetHoldingWeapon()
     {
-        return GetWeaponByID(holdingItem);
+        return wl.GetWeaponByID(holdingItem);
     }
 
     public int GetSelectedItem()
@@ -456,7 +451,7 @@ public class Player : MonoBehaviour
 
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
-            LoadWeapon(GetWeaponByID(i));
+            LoadWeapon(wl.GetWeaponByID(i));
         }
 
         currentLevel = PlayerPrefs.GetInt("level", 1);
@@ -464,9 +459,9 @@ public class Player : MonoBehaviour
 
     private void LoadWeapon(WeaponList.Weapon weapon)
     {
-        weapon.ammo = PlayerPrefs.GetInt("ammo" + weapon.name, 0);
-        weapon.magazine = PlayerPrefs.GetInt("magazine" + weapon.name, 0);
-        weapon.SetWeapon(MathFunctions.IntToBool(PlayerPrefs.GetInt("has" + weapon.name, 0)));
+        weapon.ammo = PlayerPrefs.GetInt("ammo" + weapon.id, 0);
+        weapon.magazine = PlayerPrefs.GetInt("magazine" + weapon.id, 0);
+        weapon.SetWeapon(MathFunctions.IntToBool(PlayerPrefs.GetInt("has" + weapon.id, 0)));
     }
 
     public void SaveGame()
@@ -477,14 +472,14 @@ public class Player : MonoBehaviour
 
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
-            SaveWeapon(GetWeaponByID(i));
+            SaveWeapon(wl.GetWeaponByID(i));
         }
     }
 
     private void SaveWeapon(WeaponList.Weapon weapon)
     {
-        PlayerPrefs.SetInt("ammo" + weapon.name, weapon.ammo);
-        PlayerPrefs.SetInt("magazine" + weapon.name, weapon.magazine);
-        PlayerPrefs.SetInt("has" + weapon.name, MathFunctions.BoolToInt(weapon.HasWeapon()));
+        PlayerPrefs.SetInt("ammo" + weapon.id, weapon.ammo);
+        PlayerPrefs.SetInt("magazine" + weapon.id, weapon.magazine);
+        PlayerPrefs.SetInt("has" + weapon.id, MathFunctions.BoolToInt(weapon.HasWeapon()));
     }
 }

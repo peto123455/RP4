@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     private float fov;
     private float timer = 0;
     private float viewDistance, startingAngle;
-    private WeaponList wl;
+    private WeaponList wl = new WeaponList();
     private Sounds sounds;
     private AudioSource sound;
     public HealthSystem healthSystem;
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     {
         fov = 90f;
         viewDistance = 13f;
-        wl = GetComponent<WeaponList>();
+        //wl = GetComponent<WeaponList>();
         sounds = GetComponent<Sounds>();
         sound = GetComponent<AudioSource>();
         healthSystem = GetComponent<HealthSystem>();
