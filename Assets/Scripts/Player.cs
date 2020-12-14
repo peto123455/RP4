@@ -59,6 +59,8 @@ public class Player : MonoBehaviour
     }
     private GadgetTimer gadgetTimer = new GadgetTimer(0f, false);
 
+    private BulletList bulletList = new BulletList();
+
     void Start() /* Funkcia, ktorá sa volá pri spustení skriptu */
     {
         rb = GetComponent<Rigidbody2D>(); /* Zoberie komponent Rigidbody2D a uloží ho do rb*/
@@ -77,32 +79,38 @@ public class Player : MonoBehaviour
 
     void Update() /* Funkcia, ktorá sa vykonáva každý snímok */
     {
-        if(controlState == ControlState.Player) 
+        if(!menu.isPaused)
         {
-            Camera.main.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -10);
-            /* Rotácia hráča */
-            float angle = Mathf.Atan2(mouseVec.x, mouseVec.y) * Mathf.Rad2Deg;
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, -angle);
-            UpdateMousePos();
-            CheckKeys();
-            Attack();
-        }
-        else if (controlState == ControlState.Gadget)
-        {
-            Camera.main.transform.position = new Vector3(gadget.transform.position.x, gadget.transform.position.y, -10);
-            CheckKeysGadget();
-        }
+            if(controlState == ControlState.Player) 
+            {
+                Camera.main.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -10);
+                /* Rotácia hráča */
+                float angle = Mathf.Atan2(mouseVec.x, mouseVec.y) * Mathf.Rad2Deg;
+                gameObject.transform.rotation = Quaternion.Euler(0, 0, -angle);
+                UpdateMousePos();
+                CheckKeys();
+                Attack();
+            }
+            else if (controlState == ControlState.Gadget)
+            {
+                Camera.main.transform.position = new Vector3(gadget.transform.position.x, gadget.transform.position.y, -10);
+                CheckKeysGadget();
+            }
 
-        UniversalKeys();
-        UpdateGadgetTimer();
+            UniversalKeys();
+            UpdateGadgetTimer();
+        }
     }
 
     void LateUpdate() /* LateUpdate sa vykonáva až po dokončení všetkých Updatov */
     {
-        UpdateMousePos();
-        /* Stará sa o nastavenie pozície a rotácie FOV */
-        fov.SetPosition(transform.position);
-        if(controlState == ControlState.Player) fov.SetDirection((Mathf.Atan2(mouseVec.x, mouseVec.y) * Mathf.Rad2Deg) - 90f);
+        if(!menu.isPaused)
+        {
+            UpdateMousePos();
+            /* Stará sa o nastavenie pozície a rotácie FOV */
+            fov.SetPosition(transform.position);
+            if(controlState == ControlState.Player) fov.SetDirection((Mathf.Atan2(mouseVec.x, mouseVec.y) * Mathf.Rad2Deg) - 90f);
+        }
     }
 
     private void FixedUpdate() /* Funkcia, ktorá sa pravidelne vykonáva nezávisle od počtu snímkov za sekundu */
@@ -173,26 +181,14 @@ public class Player : MonoBehaviour
     void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
         GameObject bulletPrefab = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
+        BulletList.BulletType bulletType = bulletList.bullets[weapon.bulletType];
 
         Bullet bullet = bulletPrefab.GetComponent<Bullet>();
+        bool critical = bulletType.IsCritical();
+
         bullet.SetShooter(gameObject);
-
-        switch (weapon.bulletType)
-        {
-            case 1:
-                if (Random.Range(0, 10) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(40, true);
-                else bullet.SetBulletDamage(20, false);
-                break;
-            case 2:
-                if (Random.Range(0, 5) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(50, true);
-                else bullet.SetBulletDamage(25, false);
-                break;
-            case 3:
-                if (Random.Range(0, 2) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(60, true);
-                else bullet.SetBulletDamage(40, false);
-                break;
-        }
-
+        bullet.SetBulletDamage(bulletType.Damage(critical), critical);
+        
         Rigidbody2D rbBullet = bulletPrefab.GetComponent<Rigidbody2D>();
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
@@ -203,7 +199,7 @@ public class Player : MonoBehaviour
         if (weapon == wl.GetWeaponByID(0)) return;
         else if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown && weapon.ammo > 0)
         {
-            if(weapon == wl.GetWeaponByID(3))
+            if(weapon == wl.GetWeaponByID(3)) //Nabíjanie brokovnice
             {
                 weapon.SetCooldown(weapon.cooldownReload);
                 sounds.PlaySound(5, sound);

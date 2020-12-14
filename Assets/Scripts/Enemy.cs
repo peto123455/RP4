@@ -18,12 +18,12 @@ public class Enemy : MonoBehaviour
     private AudioSource sound;
     public HealthSystem healthSystem;
 
+    private BulletList bulletList = new BulletList();
+
     void Awake()
     {
         fov = 90f;
         viewDistance = 13f;
-        //wl = GetComponent<WeaponList>();
-        //sounds = GetComponent<Sounds>();
         sounds = new Sounds();
         sound = GetComponent<AudioSource>();
         healthSystem = GetComponent<HealthSystem>();
@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
         {
             if(wl.weapons[holdingGun].GetMagazine() > 0)
             {
-                Shoot(wl.weapons[holdingGun].bulletType);
+                Shoot(wl.weapons[holdingGun]);
                 TakeAmmo(wl.weapons[holdingGun], 1);
                 sounds.PlaySound(wl.weapons[holdingGun].sound, sound);
                 timer = Time.time + wl.weapons[holdingGun].cooldownTime;
@@ -84,29 +84,18 @@ public class Enemy : MonoBehaviour
         weapon.magazine = weapon.maxMagazine;
     }
 
-    private void Shoot(int type) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
+    private void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
-        GameObject bullet = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
+        GameObject bulletPrefab = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
+        BulletList.BulletType bulletType = bulletList.bullets[weapon.bulletType];
 
-        bullet.GetComponent<Bullet>().SetShooter(gameObject);
+        Bullet bullet = bulletPrefab.GetComponent<Bullet>();
+        bool critical = bulletType.IsCritical();
 
-        switch (type)
-        {
-            case 1:
-                if (Random.Range(0, 10) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(40, true);
-                else bullet.GetComponent<Bullet>().SetBulletDamage(20, false);
-                break;
-            case 2:
-                if (Random.Range(0, 5) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(50, true);
-                else bullet.GetComponent<Bullet>().SetBulletDamage(25, false);
-                break;
-            case 3:
-                if (Random.Range(0, 2) == 0) bullet.GetComponent<Bullet>().SetBulletDamage(60, true);
-                else bullet.GetComponent<Bullet>().SetBulletDamage(40, false);
-                break;
-        }
+        bullet.SetShooter(gameObject);
+        bullet.SetBulletDamage(bulletType.Damage(critical), critical);
 
-        Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
+        Rigidbody2D rbBullet = bulletPrefab.GetComponent<Rigidbody2D>();
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
 

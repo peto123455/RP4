@@ -8,9 +8,8 @@ public class WeaponList
     public class Weapon
     {
         public string name; // Meno zbrane
-        public int sound;
         public float cooldownTime, cooldownReload; // Cooldowny
-        public int id, maxMagazine, magazine, bulletType, drawSound;
+        public int id, maxMagazine, magazine, bulletType, drawSound, sound;
         public int ammo = 0;
         public float cooldown = 0;
         public bool isCooldown = false;
