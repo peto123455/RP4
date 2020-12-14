@@ -201,31 +201,27 @@ public class Player : MonoBehaviour
     {
 
         if (weapon == wl.GetWeaponByID(0)) return;
-        else if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown)
+        else if (weapon.magazine != weapon.maxMagazine && !weapon.isCooldown && weapon.ammo > 0)
         {
             if(weapon == wl.GetWeaponByID(3))
             {
-                if(weapon.ammo <= 0) return;
                 weapon.SetCooldown(weapon.cooldownReload);
-                weapon.ReloadByOne();
                 sounds.PlaySound(5, sound);
                 body.Play(weapon.reloadAnimationName);
+                weapon.ReloadByOne();
                 if(weapon.magazine == weapon.maxMagazine)
                 {
                     weapon.SetCooldown(weapon.cooldownReload * 2);
                     StartCoroutine(DelayedSound(weapon.cooldownReload, 7));
                 }
-                else StartCoroutine(ShotgunReload());
+                else StartCoroutine(Reload(weapon, weapon.magazine, true));
             }
             else
             {
                 weapon.SetCooldown(weapon.cooldownReload);
-                weapon.Reload();
-                if (weapon.magazine != 0)
-                {
-                    sounds.PlaySound(2, sound);
-                    body.Play(weapon.reloadAnimationName);
-                }
+                StartCoroutine(Reload(weapon, weapon.magazine, false));
+                sounds.PlaySound(2, sound);
+                body.Play(weapon.reloadAnimationName);
             }
         }
     }
@@ -237,11 +233,15 @@ public class Player : MonoBehaviour
         sounds.PlaySound(sound, this.sound);
     }
 
-    IEnumerator ShotgunReload() //Slúži na opakované vloženie náboja do brokovnice, sa podmienky, že stále zbraň drží
+    IEnumerator Reload(WeaponList.Weapon weapon, int currentAmmo, bool byOne)
     {
         yield return new WaitForSeconds(0.75f);
 
-        if(holdingItem == 3) ReloadGun(wl.GetWeaponByID(holdingItem));
+        if(weapon == GetHoldingWeapon() && weapon.magazine == currentAmmo)
+        {
+            if(byOne) ReloadGun(wl.GetWeaponByID(holdingItem));
+            else weapon.Reload();
+        }
     }
 
     private void UpdateCooldowns()

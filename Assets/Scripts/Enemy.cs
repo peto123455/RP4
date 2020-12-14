@@ -119,7 +119,7 @@ public class Enemy : MonoBehaviour
     public void OnDeath() //Funkcia vykonaná pri smrti
     {
         GameObject gun = Instantiate(gunPrefab, transform.position, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
-        gun.GetComponent<PickupScript>().SetItem(holdingGun, 13);
+        gun.GetComponent<PickupScript>().SetItem(holdingGun, wl.GetWeaponByID(holdingGun).maxMagazine);
         Destroy(gameObject); //Zničenie objektu nepriateľa
     }
 

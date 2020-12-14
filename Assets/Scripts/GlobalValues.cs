@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class GlobalValues
 {
-    public const int WEAPONS_COUNT = 4;
+    public const byte WEAPONS_COUNT = 4;
 }

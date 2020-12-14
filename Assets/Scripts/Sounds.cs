@@ -21,29 +21,29 @@ public class Sounds
 
     public Sounds()
     {
-        soundHandgun = Resources.Load<AudioClip>("Sounds/handgun");
-        soundKnife = Resources.Load<AudioClip>("Sounds/stabSound");
-        soundHandgunReload = Resources.Load<AudioClip>("Sounds/handgunReload");
-        soundRifle = Resources.Load<AudioClip>("Sounds/rifleSound");
-        soundPickup = Resources.Load<AudioClip>("Sounds/pickup");
-        shotgunReload = Resources.Load<AudioClip>("Sounds/shotgun_oneAmmo");
-        shotgunShoot = Resources.Load<AudioClip>("Sounds/shotgun_shot");
-        shotgunChamber = Resources.Load<AudioClip>("Sounds/shotgun_chamber");
-        knifeDraw = Resources.Load<AudioClip>("Sounds/knife_draw");
-        gunDraw = Resources.Load<AudioClip>("Sounds/gun_draw");
+        /*soundHandgun =          Resources.Load<AudioClip>("Sounds/handgun");
+        soundKnife =            Resources.Load<AudioClip>("Sounds/stabSound");
+        soundHandgunReload =    Resources.Load<AudioClip>("Sounds/handgunReload");
+        soundRifle =            Resources.Load<AudioClip>("Sounds/rifleSound");
+        soundPickup =           Resources.Load<AudioClip>("Sounds/pickup");
+        shotgunReload =         Resources.Load<AudioClip>("Sounds/shotgun_oneAmmo");
+        shotgunShoot =          Resources.Load<AudioClip>("Sounds/shotgun_shot");
+        shotgunChamber =        Resources.Load<AudioClip>("Sounds/shotgun_chamber");
+        knifeDraw =             Resources.Load<AudioClip>("Sounds/knife_draw");
+        gunDraw =               Resources.Load<AudioClip>("Sounds/gun_draw");*/
 
         clip = new List<AudioClip>
         {
-            soundHandgun,       //0
-            soundKnife,         //1
-            soundHandgunReload, //2
-            soundRifle,         //3
-            soundPickup,        //4
-            shotgunReload,      //5
-            shotgunShoot,       //6
-            shotgunChamber,     //7
-            knifeDraw,          //8
-            gunDraw             //9
+            Resources.Load<AudioClip>("Sounds/handgun"),            //0
+            Resources.Load<AudioClip>("Sounds/stabSound"),          //1
+            Resources.Load<AudioClip>("Sounds/handgunReload"),      //2
+            Resources.Load<AudioClip>("Sounds/rifleSound"),         //3
+            Resources.Load<AudioClip>("Sounds/pickup"),             //4
+            Resources.Load<AudioClip>("Sounds/shotgun_oneAmmo"),    //5
+            Resources.Load<AudioClip>("Sounds/shotgun_shot"),       //6
+            Resources.Load<AudioClip>("Sounds/shotgun_chamber"),    //7
+            Resources.Load<AudioClip>("Sounds/knife_draw"),         //8
+            Resources.Load<AudioClip>("Sounds/gun_draw")            //9
         };
     }
 
