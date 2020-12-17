@@ -25,12 +25,7 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer, collisionLayer;
     private AudioSource sound = new AudioSource();
 
-    //public Ammo knife = new Ammo(0, 0); /* Slúži len na zistovanie cooldownu na nožíku */
-    //public Ammo glock = new Ammo(13, 39); /* Hráčove náboje a stav cooldownu v zbrani Glock */
-    //public Ammo ak = new Ammo(30, 120);
-
     private float speedAnimation;
-    //private float[] cooldown = { 0f, 0f, 0f }; //0 Knife, 1 Glock, 2 Rifle
 
     private int holdingItem = 0;
     private Vector2 mouseVec, mousePos;
@@ -64,8 +59,6 @@ public class Player : MonoBehaviour
     void Start() /* Funkcia, ktorá sa volá pri spustení skriptu */
     {
         rb = GetComponent<Rigidbody2D>(); /* Zoberie komponent Rigidbody2D a uloží ho do rb*/
-        //wl = GetComponent<WeaponList>();
-        //sounds = GetComponent<Sounds>();
         sounds = new Sounds();
         sound = GetComponent<AudioSource>();
         gadgets = GetComponent<Gadgets>();
@@ -188,7 +181,7 @@ public class Player : MonoBehaviour
 
         bullet.SetShooter(gameObject);
         bullet.SetBulletDamage(bulletType.Damage(critical), critical);
-        
+
         Rigidbody2D rbBullet = bulletPrefab.GetComponent<Rigidbody2D>();
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
@@ -321,27 +314,6 @@ public class Player : MonoBehaviour
         else if (GetSelectedItem() == 2 && !wl.GetWeaponByID(2).HasWeapon()) SelectItem(0);
         else if (GetSelectedItem() == 3 && !wl.GetWeaponByID(3).HasWeapon()) SelectItem(0);
     }
-
-    /*public void TakeDamage(int damage, bool critical, GameObject shotBy = null) /* Funkcia, ktorá odobere hráčovi životy */
-    /*{
-        int tmp;
-        if (!critical) tmp = 2;
-        else tmp = 1;
-
-        GameObject text = Instantiate(floatingText, transform.position, Quaternion.identity);
-        text.GetComponent<FloatingScript>().SetText(damage.ToString(), 0.5f, tmp);
-
-        if(armor > 0)
-        {
-            armor -= damage;
-            if(armor < 0) armor = 0;
-        }
-        else health -= damage;
-        if(health <= 0)
-        {
-            OnDeath();
-        }
-    }*/
 
     private void Movement()
     {

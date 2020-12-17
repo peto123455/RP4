@@ -36,6 +36,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         ChceckVision();
+        GetComponent<Animator>().SetInteger("item", holdingGun);
     }
 
     private void ChceckVision()
