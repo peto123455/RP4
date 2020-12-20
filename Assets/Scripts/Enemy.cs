@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         fov = 90f;
-        viewDistance = 13f;
+        viewDistance = 14f;
         sounds = new Sounds();
         sound = GetComponent<AudioSource>();
         healthSystem = GetComponent<HealthSystem>();

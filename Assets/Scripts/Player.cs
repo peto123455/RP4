@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     /* Deklarácia premenných a objektov */
 
     [SerializeField] private FOV fov;
-    [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform firePoint, fireCheckPoint;
     [SerializeField] private PauseMenu menu;
     [SerializeField] private GameObject timerIns;
 
@@ -156,14 +156,15 @@ public class Player : MonoBehaviour
                         Vector2 rayDirection = MathFunctions.InvertVector(mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y));
 
                         RaycastHit2D checkRay = Physics2D.Raycast(firePoint.transform.position, rayDirection, 1f, collisionLayer); //Slúži na detekciu, či hráč sa nepokúša strielať cez stenu
-                        if(checkRay.collider == null)
-                        {
-                            weapon.SetCooldown(weapon.cooldownTime);
-                            Shoot(weapon);
-                            weapon.magazine -= 1;
-                            sounds.PlaySound(weapon.sound, sound);
-                            body.Play(weapon.shootAnimationName);
-                        }
+                        RaycastHit2D checkRay2 = Physics2D.Raycast(fireCheckPoint.transform.position, rayDirection, 1f, collisionLayer); //Dodatočné overenie, ak stojí pri rohu steny
+                        //if(checkRay.collider == null)
+                        //{
+                        weapon.SetCooldown(weapon.cooldownTime);
+                        if(checkRay.collider == null || checkRay2.collider == null) Shoot(weapon); //Podmienku mám iba tu, aby mal hráč pocit že vystrelil
+                        weapon.magazine -= 1;
+                        sounds.PlaySound(weapon.sound, sound);
+                        body.Play(weapon.shootAnimationName);
+                        //}
                     }
                     else if (weapon.ammo > 0) ReloadGun(weapon);
                 }
