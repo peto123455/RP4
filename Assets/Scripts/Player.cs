@@ -83,11 +83,16 @@ public class Player : MonoBehaviour
                 UpdateMousePos();
                 CheckKeys();
                 Attack();
+                Movement(); //Pohyb hráča
+                if(gadget != null) gadget.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
             }
             else if (controlState == ControlState.Gadget)
             {
                 Camera.main.transform.position = new Vector3(gadget.transform.position.x, gadget.transform.position.y, -10);
                 CheckKeysGadget();
+                GadgetMovement();
+                rb.velocity = new Vector2(0f, 0f);
+                feet.SetFloat("Speed", 0);
             }
 
             UniversalKeys();
@@ -108,7 +113,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() /* Funkcia, ktorá sa pravidelne vykonáva nezávisle od počtu snímkov za sekundu */
     {
-        if(controlState == ControlState.Player)
+        /*if(controlState == ControlState.Player)
         {
             Movement(); //Pohyb hráča
             if(gadget != null) gadget.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
@@ -118,7 +123,7 @@ public class Player : MonoBehaviour
             GadgetMovement();
             rb.velocity = new Vector2(0f, 0f);
             feet.SetFloat("Speed", 0);
-        }
+        }*/
         UpdateCooldowns();
         CheckPlayerStatus();
     }

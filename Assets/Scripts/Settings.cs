@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Settings : MonoBehaviour
 {
@@ -37,6 +38,12 @@ public class Settings : MonoBehaviour
         resolutionDropdown.RefreshShownValue();
 
         RefreshSettings();
+    }
+
+    public void RemoveKey()
+    {
+        PlayerPrefs.DeleteKey("key");
+        SceneManager.LoadScene(0);
     }
 
     private void SetResolution(int resolutionIndex)
