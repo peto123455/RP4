@@ -39,6 +39,9 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("health", 100);
         PlayerPrefs.SetInt("armor", 0);
         PlayerPrefs.SetInt("money", 0);
+        PlayerPrefs.SetInt("primary", 0);
+        PlayerPrefs.SetInt("secondary", 0);
+        PlayerPrefs.SetInt("selected", 0);
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
             CreateWeaponSave(wl.GetWeaponByID(i));

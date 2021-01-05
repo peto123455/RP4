@@ -454,7 +454,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'The END
 
-    preview build 20.12.2020'
+    preview build 5.1.2021'
 --- !u!222 &1687391573
 CanvasRenderer:
   m_ObjectHideFlags: 0

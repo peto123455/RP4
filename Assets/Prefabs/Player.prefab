@@ -160,6 +160,7 @@ MonoBehaviour:
   fireCheckPoint: {fileID: 6374581832591587189}
   menu: {fileID: 0}
   timerIns: {fileID: 0}
+  itemPrefab: {fileID: 3650514180433154721, guid: 38b36d2cb63393a4d94d451a9c8ea2b4, type: 3}
   feet: {fileID: 2382770943372008391}
   body: {fileID: 2382770942020765407}
   speed: 5
@@ -174,6 +175,9 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 512
+  weaponLayer:
+    serializedVersion: 2
+    m_Bits: 262144
   healthSystem: {fileID: 0}
 --- !u!50 &2382770942122379489
 Rigidbody2D:

@@ -27,35 +27,33 @@ public class PickupScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision) //Funkcia, ktorá sa vykoná pri kolízií hráča s objektom
     {
-        if(type < 100)
+        if(type < 100) //1:glock, 2:AK
         {
             if(collision.gameObject.tag == "Player")
             {
-                GameObject Player = collision.gameObject;
-                WeaponList.Weapon weapon = Player.GetComponent<Player>().wl.GetWeaponByID(type); 
+                Player Player = collision.gameObject.GetComponent<Player>();
+                WeaponList.Weapon weapon = Player.wl.GetWeaponByID(type); 
 
-                weapon.GiveAmmo(amount); //Dá hráčovi náboje
-                if (!weapon.HasWeapon()) GiveWeapon(weapon); //Ak nemá zbraň, tak mu ju dá
-                string str = "Picked: " + amount; //Naformátuje string
-                switch(weapon.bulletType)
+                if(!Player.wl.HasThisWeapon(weapon) && !Player.wl.IsWeaponSlotOccupied(weapon))
                 {
-                    case 1:
-                        str += " 9mm bullets";
-                        break;
-                    case 2:
-                        str += " 7.62×39mm bullets";
-                        break;
-                    case 3:
-                        str += " shotgun slug rounds";
-                        break;
+                    weapon.GiveAmmo(amount); //Dá hráčovi náboje
+                    GiveAmmoText(weapon);
+                    GiveWeaponText(weapon);
+                    Player.wl.EquipWeapon(weapon);
+                    Player.sounds.PlaySound(4, Player.GetComponent<AudioSource>()); //Prehrá zvuk
+                    Destroy(gameObject); //Zničí sa
                 }
-                Player.GetComponent<Player>().sounds.PlaySound(4, Player.GetComponent<AudioSource>()); //Prehrá zvuk
-                ShowText(str, 1.5f, 0); //Zobrazí text v hre
-                Destroy(gameObject); //Zničí sa
+                else if(Player.wl.HasThisWeapon(weapon))
+                {
+                    weapon.GiveAmmo(amount);
+                    GiveAmmoText(weapon);
+                    Player.sounds.PlaySound(4, Player.GetComponent<AudioSource>());
+                    Destroy(gameObject); //Zničí sa
+                }
             }
         }
         else
-        switch (type) //1:glock, 2:AK, 101:First Aid Kit
+        switch (type) //101:First Aid Kit
         {
             ///////////////////////
             //       ITEMY       //
@@ -94,10 +92,37 @@ public class PickupScript : MonoBehaviour
         text.GetComponent<FloatingScript>().SetText(str, offset, color); //Nastaví mu text, odchylku a farbu
     }
 
-    private void GiveWeapon(WeaponList.Weapon weapon)
+    private void GiveWeaponText(WeaponList.Weapon weapon)
     {
         string str = "Picked: " + weapon.name;
-        weapon.SetWeapon(true); //Nastavenie zbrane
+        //weapon.SetWeapon(true); //Nastavenie zbrane
         ShowText(str, 2f, 0); //Zobrazenie textu
+    }
+
+    private void GiveAmmoText(WeaponList.Weapon weapon)
+    {
+        string str = "Picked: " + amount; //Naformátuje string
+        switch(weapon.bulletType)
+        {
+            case 1:
+                str += " 9mm bullets";
+                break;
+            case 2:
+                str += " 7.62×39mm bullets";
+                break;
+            case 3:
+                str += " shotgun slug rounds";
+                break;
+        }
+        ShowText(str, 1.5f, 0); //Zobrazí text v hre
+    }
+    public int GetItemType()
+    {
+        return type;
+    }
+
+    public int GetAmount()
+    {
+        return amount;
     }
 }

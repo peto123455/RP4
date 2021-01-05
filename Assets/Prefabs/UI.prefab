@@ -1744,7 +1744,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Preview build - 20.12.2020
+  m_Text: Preview build - 5.1.2021
 --- !u!1 &3971302634342146643
 GameObject:
   m_ObjectHideFlags: 0

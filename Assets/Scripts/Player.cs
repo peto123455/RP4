@@ -16,13 +16,13 @@ public class Player : MonoBehaviour
     [SerializeField] private FOV fov;
     [SerializeField] private Transform firePoint, fireCheckPoint;
     [SerializeField] private PauseMenu menu;
-    [SerializeField] private GameObject timerIns;
+    [SerializeField] private GameObject timerIns, itemPrefab;
 
     public Animator feet, body;
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
     public int currentLevel, money;
-    public LayerMask enemyLayer, collisionLayer;
+    public LayerMask enemyLayer, collisionLayer, weaponLayer;
     private AudioSource sound = new AudioSource();
 
     private float speedAnimation;
@@ -232,7 +232,7 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.75f);
 
-        if(weapon == GetHoldingWeapon() && weapon.magazine == currentAmmo)
+        if(weapon == wl.GetHoldingWeapon() && weapon.magazine == currentAmmo)
         {
             if(byOne) ReloadGun(wl.GetWeaponByID(holdingItem));
             else weapon.Reload();
@@ -263,13 +263,78 @@ public class Player : MonoBehaviour
 
     private void CheckKeys() //Funkcia na kontrolui kláves ak hráč ovláda postavu
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectItem(0); //Knife
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && wl.GetWeaponByID(1).hasWeapon) SelectItem(1); //Glock
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && wl.GetWeaponByID(2).hasWeapon) SelectItem(2); //AK-47
-        else if (Input.GetKeyDown(KeyCode.Alpha4) && wl.GetWeaponByID(3).hasWeapon) SelectItem(3); //AK-47
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectWeapon(wl.weapons[0]); //Knife
+        else if (Input.GetKeyDown(KeyCode.Alpha2) /*&& wl.GetWeaponByID(1).hasWeapon*/) SelectWeapon(wl.primary); //Glock
+        else if (Input.GetKeyDown(KeyCode.Alpha3) /*&& wl.GetWeaponByID(2).hasWeapon*/) SelectWeapon(wl.secondary); //AK-47
+        //else if (Input.GetKeyDown(KeyCode.Alpha4) && wl.GetWeaponByID(3).hasWeapon) SelectItem(3); //SPAS
 
         if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(wl.GetWeaponByID(holdingItem)); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
+        else if(Input.GetKeyDown(KeyCode.Tab)) Pickup();
+    }
+
+    private void Pickup()
+    {
+        GameObject weaponObject = CheckGround();
+        if(weaponObject != null)
+        {
+            PickupScript pickup = weaponObject.GetComponent<PickupScript>();
+
+            WeaponList.Weapon weapon = wl.GetWeaponByID(pickup.GetItemType());
+            DropWeapon(weapon.slot);
+            wl.EquipWeapon(weapon);
+            SelectWeapon(weapon);
+            if(pickup.GetAmount() > weapon.maxMagazine)
+            {
+                weapon.SetMagazine(weapon.maxMagazine);
+                weapon.GiveAmmo(pickup.GetAmount() - weapon.maxMagazine);
+            }
+            else weapon.SetMagazine(pickup.GetAmount());
+
+            Destroy(weaponObject);
+        }
+    }
+
+    private GameObject CheckGround()
+    {
+        RaycastHit2D ray1 = Physics2D.Raycast(gameObject.transform.position, Vector2.up, 1f, weaponLayer);
+        RaycastHit2D ray2 = Physics2D.Raycast(gameObject.transform.position, Vector2.left, 1f, weaponLayer);
+        RaycastHit2D ray3 = Physics2D.Raycast(gameObject.transform.position, Vector2.down, 1f, weaponLayer);
+        RaycastHit2D ray4 = Physics2D.Raycast(gameObject.transform.position, Vector2.right, 1f, weaponLayer);
+        RaycastHit2D ray5 = Physics2D.Raycast(gameObject.transform.position, new Vector2(1f, 1f), 1f, weaponLayer);
+        RaycastHit2D ray6 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-1f, -1f), 1f, weaponLayer);
+        RaycastHit2D ray7 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-1f, 1f), 1f, weaponLayer);
+        RaycastHit2D ray8 = Physics2D.Raycast(gameObject.transform.position, new Vector2(1f, -1f), 1f, weaponLayer);
+
+        List<RaycastHit2D> rays = new List<RaycastHit2D>(){ray1, ray2, ray3, ray4, ray5, ray6, ray7, ray8};
+
+        for(int i = 0; i < 8; ++i)
+        {
+            if(rays[i].collider != null && rays[i].collider.tag == "Weapon")
+            {
+                return rays[i].collider.gameObject;
+            }
+        }
+
+        return null;
+    }
+
+    private void DropWeapon(int slot)
+    {
+        GameObject gun = Instantiate(itemPrefab, gameObject.transform.position, Quaternion.identity);
+
+        if(slot == 1)
+        {
+            gun.GetComponent<PickupScript>().SetItem(wl.primary.id, wl.primary.magazine);
+            wl.primary.magazine = 0;
+            wl.NullWeapon(wl.primary);
+        }
+        else if(slot == 2)
+        {
+            gun.GetComponent<PickupScript>().SetItem(wl.secondary.id, wl.secondary.magazine);
+            wl.secondary.magazine = 0;
+            wl.NullWeapon(wl.secondary);
+        }
     }
 
     private void UniversalKeys() //Klávesi, ktoé funguje v oboch režimoch ovládania
@@ -307,18 +372,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void SelectItem(int item) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
+    private void SelectWeapon(WeaponList.Weapon weapon) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
     {
-        if(item < 100 && holdingItem != item) sounds.PlaySound(wl.weapons[item].drawSound, sound);
-        body.SetInteger("item", item); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
-        holdingItem = item;
+        if(weapon == null) return;
+        body.SetInteger("item", weapon.id); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
+        holdingItem = weapon.id;
+        wl.selected = weapon;
     }
 
     private void CheckPlayerStatus()
     {
-        if(GetSelectedItem() == 1 && !wl.GetWeaponByID(1).HasWeapon()) SelectItem(0);
-        else if (GetSelectedItem() == 2 && !wl.GetWeaponByID(2).HasWeapon()) SelectItem(0);
-        else if (GetSelectedItem() == 3 && !wl.GetWeaponByID(3).HasWeapon()) SelectItem(0);
+        //if(GetSelectedItem() == 1 && !wl.GetWeaponByID(1).HasWeapon()) SelectItem(0);
+        //else if (GetSelectedItem() == 2 && !wl.GetWeaponByID(2).HasWeapon()) SelectItem(0);
+        //else if (GetSelectedItem() == 3 && !wl.GetWeaponByID(3).HasWeapon()) SelectItem(0);
+        //if(wl.selected != wl.primary && wl.selected != wl.secondary) SelectWeapon(wl.weapons[0]);
     }
 
     private void Movement()
@@ -350,15 +417,10 @@ public class Player : MonoBehaviour
     // FUNKCIE PRE SPRÁVU HRÁČA //
     //////////////////////////////
 
-    public WeaponList.Weapon GetHoldingWeapon()
-    {
-        return wl.GetWeaponByID(holdingItem);
-    }
-
-    public int GetSelectedItem()
+    /*public int GetSelectedItem()
     {
         return holdingItem;
-    }
+    }*/
 
     public void GiveMoney(int money)
     {
@@ -424,19 +486,24 @@ public class Player : MonoBehaviour
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         money = PlayerPrefs.GetInt("money", 0);
 
+        if(PlayerPrefs.GetInt("primary", 0) != 0) wl.primary = wl.GetWeaponByID(PlayerPrefs.GetInt("primary", 0));
+        if(PlayerPrefs.GetInt("secondary", 0) != 0) wl.secondary = wl.GetWeaponByID(PlayerPrefs.GetInt("secondary", 0));
+        WeaponList.Weapon lastSelect = wl.GetWeaponByID(PlayerPrefs.GetInt("selected", 0));
+
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
             LoadWeapon(wl.GetWeaponByID(i));
         }
 
         currentLevel = PlayerPrefs.GetInt("level", 1);
+        SelectWeapon(lastSelect);
     }
 
     private void LoadWeapon(WeaponList.Weapon weapon)
     {
         weapon.ammo = PlayerPrefs.GetInt("ammo" + weapon.id, 0);
         weapon.magazine = PlayerPrefs.GetInt("magazine" + weapon.id, 0);
-        weapon.SetWeapon(MathFunctions.IntToBool(PlayerPrefs.GetInt("has" + weapon.id, 0)));
+        //weapon.SetWeapon(MathFunctions.IntToBool(PlayerPrefs.GetInt("has" + weapon.id, 0)));
     }
 
     public void SaveGame()
@@ -444,6 +511,13 @@ public class Player : MonoBehaviour
         PlayerPrefs.SetInt("health", healthSystem.GetHealth());
         PlayerPrefs.SetInt("armor", healthSystem.GetArmor());
         PlayerPrefs.SetInt("money", money);
+
+        if(wl.primary != null) PlayerPrefs.SetInt("primary", wl.primary.id);
+        else PlayerPrefs.SetInt("primary", 0);
+        if(wl.secondary != null) PlayerPrefs.SetInt("secondary", wl.secondary.id);
+        else PlayerPrefs.SetInt("secondary", 0);
+        if(wl.selected != null) PlayerPrefs.SetInt("selected", wl.selected.id);
+        else PlayerPrefs.SetInt("selected", 0);
 
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
@@ -455,6 +529,6 @@ public class Player : MonoBehaviour
     {
         PlayerPrefs.SetInt("ammo" + weapon.id, weapon.ammo);
         PlayerPrefs.SetInt("magazine" + weapon.id, weapon.magazine);
-        PlayerPrefs.SetInt("has" + weapon.id, MathFunctions.BoolToInt(weapon.HasWeapon()));
+        //PlayerPrefs.SetInt("has" + weapon.id, MathFunctions.BoolToInt(weapon.HasWeapon()));
     }
 }
