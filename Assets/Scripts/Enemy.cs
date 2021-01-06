@@ -79,13 +79,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void ReloadWeapon(WeaponList.Weapon weapon)
+    private void ReloadWeapon(Weapon weapon)
     {
         timer = Time.time + weapon.cooldownReload * 2;
         weapon.magazine = weapon.maxMagazine;
     }
 
-    private void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
+    private void Shoot(Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
         GameObject bulletPrefab = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
         BulletList.BulletType bulletType = bulletList.bullets[weapon.bulletType];
@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
 
-    private void TakeAmmo(WeaponList.Weapon weapon, int amount = 1)
+    private void TakeAmmo(Weapon weapon, int amount = 1)
     {
         weapon.magazine -= amount;
         if(weapon.magazine < 0) weapon.magazine = 0;

@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 
     private float speedAnimation;
 
-    private int holdingItem = 0;
+    //private int holdingItem = 0;
     private Vector2 mouseVec, mousePos;
     public Sounds sounds;
     private Rigidbody2D rb;
@@ -137,47 +137,44 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButton("Fire1"))
         {
-            if(holdingItem < 100) //Všetky zbrane
+            //Weapon weapon = wl.GetWeaponByID(holdingItem);
+            if(!wl.selected.isCooldown && !wl.selected.playerIgnoreCooldown || wl.selected.playerIgnoreCooldown && Input.GetButtonDown("Fire1"))
             {
-                WeaponList.Weapon weapon = wl.GetWeaponByID(holdingItem);
-                if(!weapon.isCooldown && !weapon.playerIgnoreCooldown || weapon.playerIgnoreCooldown && Input.GetButtonDown("Fire1"))
+                if(wl.selected == wl.GetWeaponByID(0))
                 {
-                    if(weapon == wl.GetWeaponByID(0))
+                    wl.selected.SetCooldown(wl.selected.cooldownTime);
+                    body.Play(wl.selected.shootAnimationName);
+                    RaycastHit2D checkRay = Physics2D.Raycast(gameObject.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 1.5f, enemyLayer);
+                    if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
                     {
-                        weapon.SetCooldown(weapon.cooldownTime);
-                        body.Play(weapon.shootAnimationName);
-                        RaycastHit2D checkRay = Physics2D.Raycast(gameObject.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 1.5f, enemyLayer);
-                        if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
-                        {
-                            Enemy enemy = checkRay.collider.GetComponent<Enemy>();
-                            enemy.healthSystem.TakeDamage(100, false, gameObject);
-                            sounds.PlaySound(weapon.sound, sound);
-                            GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
-                            Destroy(hitInstance, 2f);
-                        }
+                        Enemy enemy = checkRay.collider.GetComponent<Enemy>();
+                        enemy.healthSystem.TakeDamage(100, false, gameObject);
+                        sounds.PlaySound(wl.selected.sound, sound);
+                        GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
+                        Destroy(hitInstance, 2f);
                     }
-                    else if(weapon.magazine > 0)
-                    {
-                        Vector2 rayDirection = MathFunctions.InvertVector(mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y));
-
-                        RaycastHit2D checkRay = Physics2D.Raycast(firePoint.transform.position, rayDirection, 1f, collisionLayer); //Slúži na detekciu, či hráč sa nepokúša strielať cez stenu
-                        RaycastHit2D checkRay2 = Physics2D.Raycast(fireCheckPoint.transform.position, rayDirection, 1f, collisionLayer); //Dodatočné overenie, ak stojí pri rohu steny
-                        //if(checkRay.collider == null)
-                        //{
-                        weapon.SetCooldown(weapon.cooldownTime);
-                        if(checkRay.collider == null || checkRay2.collider == null) Shoot(weapon); //Podmienku mám iba tu, aby mal hráč pocit že vystrelil
-                        weapon.magazine -= 1;
-                        sounds.PlaySound(weapon.sound, sound);
-                        body.Play(weapon.shootAnimationName);
-                        //}
-                    }
-                    else if (weapon.ammo > 0) ReloadGun(weapon);
                 }
+                else if(wl.selected.magazine > 0)
+                {
+                    Vector2 rayDirection = MathFunctions.InvertVector(mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y));
+
+                    RaycastHit2D checkRay = Physics2D.Raycast(firePoint.transform.position, rayDirection, 1f, collisionLayer); //Slúži na detekciu, či hráč sa nepokúša strielať cez stenu
+                    RaycastHit2D checkRay2 = Physics2D.Raycast(fireCheckPoint.transform.position, rayDirection, 1f, collisionLayer); //Dodatočné overenie, ak stojí pri rohu steny
+                    //if(checkRay.collider == null)
+                    //{
+                    wl.selected.SetCooldown(wl.selected.cooldownTime);
+                    if(checkRay.collider == null || checkRay2.collider == null) Shoot(wl.selected); //Podmienku mám iba tu, aby mal hráč pocit že vystrelil
+                    wl.selected.magazine -= 1;
+                    sounds.PlaySound(wl.selected.sound, sound);
+                    body.Play(wl.selected.shootAnimationName);
+                    //}
+                }
+                else if (wl.selected.ammo > 0) ReloadGun(wl.selected);
             }
         }
     }
 
-    void Shoot(WeaponList.Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
+    void Shoot(Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
     {
         GameObject bulletPrefab = Instantiate(bulletPistol, firePoint.position, firePoint.rotation);
         BulletList.BulletType bulletType = bulletList.bullets[weapon.bulletType];
@@ -192,7 +189,7 @@ public class Player : MonoBehaviour
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
     }
 
-    private void ReloadGun(WeaponList.Weapon weapon) /* Funkcia, ktorá prebije zbraň */
+    private void ReloadGun(Weapon weapon) /* Funkcia, ktorá prebije zbraň */
     {
 
         if (weapon == wl.GetWeaponByID(0)) return;
@@ -228,13 +225,13 @@ public class Player : MonoBehaviour
         sounds.PlaySound(sound, this.sound);
     }
 
-    IEnumerator Reload(WeaponList.Weapon weapon, int currentAmmo, bool byOne)
+    IEnumerator Reload(Weapon weapon, int currentAmmo, bool byOne)
     {
         yield return new WaitForSeconds(0.75f);
 
         if(weapon == wl.GetHoldingWeapon() && weapon.magazine == currentAmmo)
         {
-            if(byOne) ReloadGun(wl.GetWeaponByID(holdingItem));
+            if(byOne) ReloadGun(wl.selected);
             else weapon.Reload();
         }
     }
@@ -247,7 +244,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void UpdateCooldown(WeaponList.Weapon weapon)
+    private void UpdateCooldown(Weapon weapon)
     {
         if (weapon.isCooldown)
         {
@@ -268,7 +265,7 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3) /*&& wl.GetWeaponByID(2).hasWeapon*/) SelectWeapon(wl.secondary); //AK-47
         //else if (Input.GetKeyDown(KeyCode.Alpha4) && wl.GetWeaponByID(3).hasWeapon) SelectItem(3); //SPAS
 
-        if (Input.GetKeyDown(KeyCode.R) && holdingItem != 0) ReloadGun(wl.GetWeaponByID(holdingItem)); //Reload
+        if (Input.GetKeyDown(KeyCode.R) && wl.selected.id != 0) ReloadGun(wl.selected); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
         else if(Input.GetKeyDown(KeyCode.Tab)) Pickup();
     }
@@ -280,7 +277,7 @@ public class Player : MonoBehaviour
         {
             PickupScript pickup = weaponObject.GetComponent<PickupScript>();
 
-            WeaponList.Weapon weapon = wl.GetWeaponByID(pickup.GetItemType());
+            Weapon weapon = wl.GetWeaponByID(pickup.GetItemType());
             DropWeapon(weapon.slot);
             wl.EquipWeapon(weapon);
             SelectWeapon(weapon);
@@ -372,11 +369,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void SelectWeapon(WeaponList.Weapon weapon) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
+    private void SelectWeapon(Weapon weapon) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
     {
         if(weapon == null) return;
         body.SetInteger("item", weapon.id); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
-        holdingItem = weapon.id;
+        //holdingItem = weapon.id;
         wl.selected = weapon;
     }
 
@@ -488,7 +485,7 @@ public class Player : MonoBehaviour
 
         if(PlayerPrefs.GetInt("primary", 0) != 0) wl.primary = wl.GetWeaponByID(PlayerPrefs.GetInt("primary", 0));
         if(PlayerPrefs.GetInt("secondary", 0) != 0) wl.secondary = wl.GetWeaponByID(PlayerPrefs.GetInt("secondary", 0));
-        WeaponList.Weapon lastSelect = wl.GetWeaponByID(PlayerPrefs.GetInt("selected", 0));
+        Weapon lastSelect = wl.GetWeaponByID(PlayerPrefs.GetInt("selected", 0));
 
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
@@ -499,7 +496,7 @@ public class Player : MonoBehaviour
         SelectWeapon(lastSelect);
     }
 
-    private void LoadWeapon(WeaponList.Weapon weapon)
+    private void LoadWeapon(Weapon weapon)
     {
         weapon.ammo = PlayerPrefs.GetInt("ammo" + weapon.id, 0);
         weapon.magazine = PlayerPrefs.GetInt("magazine" + weapon.id, 0);
@@ -525,7 +522,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void SaveWeapon(WeaponList.Weapon weapon)
+    private void SaveWeapon(Weapon weapon)
     {
         PlayerPrefs.SetInt("ammo" + weapon.id, weapon.ammo);
         PlayerPrefs.SetInt("magazine" + weapon.id, weapon.magazine);

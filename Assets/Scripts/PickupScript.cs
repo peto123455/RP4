@@ -32,7 +32,7 @@ public class PickupScript : MonoBehaviour
             if(collision.gameObject.tag == "Player")
             {
                 Player Player = collision.gameObject.GetComponent<Player>();
-                WeaponList.Weapon weapon = Player.wl.GetWeaponByID(type); 
+                Weapon weapon = Player.wl.GetWeaponByID(type); 
 
                 if(!Player.wl.HasThisWeapon(weapon) && !Player.wl.IsWeaponSlotOccupied(weapon))
                 {
@@ -92,14 +92,14 @@ public class PickupScript : MonoBehaviour
         text.GetComponent<FloatingScript>().SetText(str, offset, color); //Nastaví mu text, odchylku a farbu
     }
 
-    private void GiveWeaponText(WeaponList.Weapon weapon)
+    private void GiveWeaponText(Weapon weapon)
     {
         string str = "Picked: " + weapon.name;
         //weapon.SetWeapon(true); //Nastavenie zbrane
         ShowText(str, 2f, 0); //Zobrazenie textu
     }
 
-    private void GiveAmmoText(WeaponList.Weapon weapon)
+    private void GiveAmmoText(Weapon weapon)
     {
         string str = "Picked: " + amount; //Naformátuje string
         switch(weapon.bulletType)

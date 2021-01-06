@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public bool isPaused = false;
-    [SerializeField] private GameObject pauseMenu, deathMenu;
+    [SerializeField] private GameObject pauseMenu, deathMenu, completeMenu, UI;
 
     void Awake()
     {
         Time.timeScale = 1f;
+        UI = GameObject.Find("UI");
     }
 
     void Update()
@@ -26,10 +27,13 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 0f;
         isPaused = true;
-        if(!deathMenu.activeSelf)
+        if(!deathMenu.activeSelf && !completeMenu.activeSelf)
         {
             pauseMenu.SetActive(true);
             deathMenu.SetActive(false);
+            completeMenu.SetActive(false);
+
+            UI.SetActive(false);
         }
     }
 
@@ -37,16 +41,44 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 0f;
         isPaused = true;
+
         deathMenu.SetActive(true);
         pauseMenu.SetActive(false);
+        completeMenu.SetActive(false);
+
+        UI.SetActive(false);
+    }
+
+    public void ShowCompleteMenu()
+    {
+        Time.timeScale = 0f;
+        isPaused = true;
+
+        deathMenu.SetActive(false);
+        pauseMenu.SetActive(false);
+        completeMenu.SetActive(true);
+
+        UI.SetActive(false);
+    }
+
+    public void NextLevel()
+    {
+        GameObject.Find("Player").GetComponent<Player>().SaveGame();
+        int nextLevel = PlayerPrefs.GetInt("level", 1) + 1;
+        PlayerPrefs.SetInt("level", nextLevel);
+        SceneManager.LoadScene(nextLevel);
     }
 
     public void Resume()
     {
         Time.timeScale = 1f;
         isPaused = false;
+
         pauseMenu.SetActive(false);
         deathMenu.SetActive(false);
+        completeMenu.SetActive(false);
+
+        UI.SetActive(true);
     }
 
     public void MainMenu()

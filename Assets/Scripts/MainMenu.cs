@@ -48,7 +48,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    private void CreateWeaponSave(WeaponList.Weapon weapon)
+    private void CreateWeaponSave(Weapon weapon)
     {
         PlayerPrefs.SetInt("ammo" + weapon.id, 0);
         PlayerPrefs.SetInt("magazine" + weapon.id, 0);

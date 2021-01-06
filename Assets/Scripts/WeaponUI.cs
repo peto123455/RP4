@@ -47,7 +47,7 @@ public class WeaponUI : MonoBehaviour
         //Peniaze
         moneyText.text = player.money.ToString();
         //Zbrane
-        WeaponList.Weapon weapon = player.wl.GetHoldingWeapon();
+        Weapon weapon = player.wl.GetHoldingWeapon();
         if(weapon.id == 0)
         {
             image.sprite = imageKnife;

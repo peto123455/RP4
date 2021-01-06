@@ -356,6 +356,7 @@ Transform:
   - {fileID: 1839641008}
   - {fileID: 1729379888}
   - {fileID: 311300102}
+  - {fileID: 1122623496}
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1697,6 +1698,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab50ea7969ea3b9418f9c1e7de3d4741, type: 3}
+--- !u!4 &1122623496 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+  m_PrefabInstance: {fileID: 1972385471}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1211655156 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5346191880434216476, guid: c20c1c520be58994db75bd2f19a59fa7, type: 3}
@@ -2634,6 +2640,83 @@ Transform:
   m_Father: {fileID: 1854689772}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1972385471
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 78880489}
+    m_Modifications:
+    - target: {fileID: 7364017912584130932, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_Name
+      value: MessageShowTabHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130933, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: text
+      value: Use TAB key to replace your weapon with weapon from ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130934, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_Size.x
+      value: 3.3068876
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130934, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_Size.y
+      value: 4.782716
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130934, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.9582825
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130934, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.5704093
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.2303934
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -9.319695
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 552.3311
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130935, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
 --- !u!1001 &1977491448
 PrefabInstance:
   m_ObjectHideFlags: 0
