@@ -69,6 +69,13 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene(nextLevel);
     }
 
+    public void SaveOnly()
+    {
+        GameObject.Find("Player").GetComponent<Player>().SaveGame();
+        int nextLevel = PlayerPrefs.GetInt("level", 1) + 1;
+        PlayerPrefs.SetInt("level", nextLevel);  
+    }
+
     public void Resume()
     {
         Time.timeScale = 1f;

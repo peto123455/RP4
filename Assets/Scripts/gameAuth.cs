@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class gameAuth : MonoBehaviour
+public class GameAuth : MonoBehaviour
 {
     [SerializeField] private InputField inputField;
     [SerializeField] private GameObject main, panel, check;

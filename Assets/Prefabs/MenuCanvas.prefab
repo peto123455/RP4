@@ -395,6 +395,18 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5346191880434216476}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: SaveOnly
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5346191880434216476}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: MainMenu
         m_Mode: 1
         m_Arguments:
@@ -1126,6 +1138,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 5346191881809270361}
   deathMenu: {fileID: 5346191880136634224}
   completeMenu: {fileID: 1816696917236932286}
+  UI: {fileID: 0}
 --- !u!1 &5346191880698193215
 GameObject:
   m_ObjectHideFlags: 0
