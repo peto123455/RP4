@@ -16,6 +16,7 @@ ScriptsOnlyBuild:
     - Player
     - RC
     - Settings
+    - Shop
     - ShowMessageTrigger
     - TheEnd
     - WeaponUI
@@ -244,6 +245,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 16748}
     - Class: 114
       Script: {instanceID: 17022}
+    - Class: 114
+      Script: {instanceID: 148948}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -367,6 +370,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 16748}
     - Class: 114
       Script: {instanceID: 17022}
+    - Class: 114
+      Script: {instanceID: 148948}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -713,7 +718,7 @@ ScriptsOnlyBuild:
     className: ActivationTrack
   - hash:
       serializedVersion: 2
-      Hash: 557e72e27e93296ba627b549f2d815b3
+      Hash: 43da76d070539193acaeb1a0ae8fff95
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: HealthSystem
@@ -1725,6 +1730,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 121c87a44863831801e0f14711ed0547
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Shop
   platform: 19
   scenePathNames:
   - Assets/Scenes/Menu.unity

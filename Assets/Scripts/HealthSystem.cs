@@ -5,7 +5,7 @@ using UnityEngine;
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField]
-    private int health, armor;
+    private int health, maxhealth, armor;
 
     [SerializeField] GameObject floatingText;
 
@@ -37,6 +37,21 @@ public class HealthSystem : MonoBehaviour
     public void SetHealth(int health)
     {
         this.health = health;
+    }
+
+    public void SetMaxHealth(int maxhealth)
+    {
+        this.maxhealth = maxhealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return this.maxhealth;
+    }
+
+    public void SetHealthToMax()
+    {
+        health = maxhealth;
     }
 
     public void SetArmor(int armor)

@@ -62,10 +62,10 @@ public class PickupScript : MonoBehaviour
             case 101: //Lékarnička
                 if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
                 {
-                    if(collision.gameObject.GetComponent<HealthSystem>().GetHealth() < 100)
+                    if(collision.gameObject.GetComponent<HealthSystem>().GetHealth() < collision.gameObject.GetComponent<HealthSystem>().GetMaxHealth())
                     {
                         ShowText("Healed", 1.5f, 0);
-                        collision.gameObject.GetComponent<HealthSystem>().SetHealth(100);
+                        collision.gameObject.GetComponent<HealthSystem>().SetHealthToMax();
                         collision.gameObject.GetComponent<Player>().sounds.PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
                         Destroy(gameObject);
                     }

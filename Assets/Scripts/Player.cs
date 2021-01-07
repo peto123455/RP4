@@ -258,12 +258,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CheckKeys() //Funkcia na kontrolui kláves ak hráč ovláda postavu
+    private void CheckKeys() //Funkcia na kontrolu kláves ak hráč ovláda postavu
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) SelectWeapon(wl.weapons[0]); //Knife
-        else if (Input.GetKeyDown(KeyCode.Alpha2) /*&& wl.GetWeaponByID(1).hasWeapon*/) SelectWeapon(wl.primary); //Glock
-        else if (Input.GetKeyDown(KeyCode.Alpha3) /*&& wl.GetWeaponByID(2).hasWeapon*/) SelectWeapon(wl.secondary); //AK-47
-        //else if (Input.GetKeyDown(KeyCode.Alpha4) && wl.GetWeaponByID(3).hasWeapon) SelectItem(3); //SPAS
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) SelectWeapon(wl.primary);
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) SelectWeapon(wl.secondary);
 
         if (Input.GetKeyDown(KeyCode.R) && wl.selected.id != 0) ReloadGun(wl.selected); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
@@ -272,7 +271,7 @@ public class Player : MonoBehaviour
 
     private void Pickup()
     {
-        GameObject weaponObject = CheckSuround(weaponLayer);
+        GameObject weaponObject = CheckSuround(weaponLayer, "Weapon");
         if(weaponObject != null)
         {
             PickupScript pickup = weaponObject.GetComponent<PickupScript>();
@@ -292,24 +291,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    private GameObject CheckSuround(LayerMask layer, float distance = 1f)
+    private GameObject CheckSuround(LayerMask layer, string tag, int rays = 16, float distance = 1.5f)
     {
-        RaycastHit2D ray1 = Physics2D.Raycast(gameObject.transform.position, new Vector2(distance,  0f), 1f, layer);
-        RaycastHit2D ray2 = Physics2D.Raycast(gameObject.transform.position, new Vector2(0f,        distance), 1f, layer);
-        RaycastHit2D ray3 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-distance, 0f), 1f, layer);
-        RaycastHit2D ray4 = Physics2D.Raycast(gameObject.transform.position, new Vector2(0f,        -distance), 1f, layer);
-        RaycastHit2D ray5 = Physics2D.Raycast(gameObject.transform.position, new Vector2(distance,  distance), 1f, layer);
-        RaycastHit2D ray6 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-distance, -distance), 1f, layer);
-        RaycastHit2D ray7 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-distance, distance), 1f, layer);
-        RaycastHit2D ray8 = Physics2D.Raycast(gameObject.transform.position, new Vector2(distance,  -distance), 1f, layer);
+        float angle = 0;
 
-        List<RaycastHit2D> rays = new List<RaycastHit2D>(){ray1, ray2, ray3, ray4, ray5, ray6, ray7, ray8};
-
-        for(int i = 0; i < 8; ++i)
+        for(int i = 0; i < rays; ++i)
         {
-            if(rays[i].collider != null && rays[i].collider.tag == "Weapon")
+            RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle) * distance, distance, layer);
+            angle += 360f/rays;
+
+            if(ray.collider != null && ray.collider.tag == tag)
             {
-                return rays[i].collider.gameObject;
+                return ray.collider.gameObject;
             }
         }
 
@@ -358,7 +351,7 @@ public class Player : MonoBehaviour
             {
                 gadget = Instantiate(gadgets.equippedGadget.prefab, gameObject.transform.position, Quaternion.identity);
                 gadgets.equippedGadget.isSpawned = true;
-                StartGadgetTimer(30f);
+                StartGadgetTimer(10f);
             }
             else if(Vector2.Distance(gameObject.transform.position, gadget.transform.position) < 2f)
             {
@@ -448,15 +441,6 @@ public class Player : MonoBehaviour
         mouseVec = mousePos - rb.position;
     }
 
-    //////////////////////////////
-    // FUNKCIE PRE SPRÁVU HRÁČA //
-    //////////////////////////////
-
-    /*public int GetSelectedItem()
-    {
-        return holdingItem;
-    }*/
-
     public void GiveMoney(int money)
     {
         this.money += money;
@@ -471,7 +455,7 @@ public class Player : MonoBehaviour
     {
         this.money = money;
     }
-    /////////////////////////////////////////////
+
     public void OnDeath()
     {
         menu.ShowDeathMenu();
@@ -519,6 +503,7 @@ public class Player : MonoBehaviour
     {
         healthSystem.SetHealth(PlayerPrefs.GetInt("health", 100));
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
+        healthSystem.SetMaxHealth(100 + PlayerPrefs.GetInt("healthLvl", 0) * 5);
         money = PlayerPrefs.GetInt("money", 0);
 
         if(PlayerPrefs.GetInt("primary", 0) != 0) wl.primary = wl.GetWeaponByID(PlayerPrefs.GetInt("primary", 0));

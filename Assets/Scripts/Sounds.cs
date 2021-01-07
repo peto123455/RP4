@@ -7,7 +7,7 @@ public class Sounds
     List<AudioClip> clip;
 
     //[SerializeField]
-    private AudioClip
+    /*private AudioClip
         soundHandgun,
         soundKnife,
         soundHandgunReload,
@@ -17,21 +17,10 @@ public class Sounds
         shotgunShoot,
         shotgunChamber,
         knifeDraw,
-        gunDraw;
+        gunDraw;*/
 
     public Sounds()
     {
-        /*soundHandgun =          Resources.Load<AudioClip>("Sounds/handgun");
-        soundKnife =            Resources.Load<AudioClip>("Sounds/stabSound");
-        soundHandgunReload =    Resources.Load<AudioClip>("Sounds/handgunReload");
-        soundRifle =            Resources.Load<AudioClip>("Sounds/rifleSound");
-        soundPickup =           Resources.Load<AudioClip>("Sounds/pickup");
-        shotgunReload =         Resources.Load<AudioClip>("Sounds/shotgun_oneAmmo");
-        shotgunShoot =          Resources.Load<AudioClip>("Sounds/shotgun_shot");
-        shotgunChamber =        Resources.Load<AudioClip>("Sounds/shotgun_chamber");
-        knifeDraw =             Resources.Load<AudioClip>("Sounds/knife_draw");
-        gunDraw =               Resources.Load<AudioClip>("Sounds/gun_draw");*/
-
         clip = new List<AudioClip>
         {
             Resources.Load<AudioClip>("Sounds/handgun"),            //0
@@ -43,7 +32,8 @@ public class Sounds
             Resources.Load<AudioClip>("Sounds/shotgun_shot"),       //6
             Resources.Load<AudioClip>("Sounds/shotgun_chamber"),    //7
             Resources.Load<AudioClip>("Sounds/knife_draw"),         //8
-            Resources.Load<AudioClip>("Sounds/gun_draw")            //9
+            Resources.Load<AudioClip>("Sounds/gun_draw"),           //9
+            Resources.Load<AudioClip>("Sounds/cash_register")       //10
         };
     }
 

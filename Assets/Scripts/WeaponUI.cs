@@ -15,6 +15,8 @@ public class WeaponUI : MonoBehaviour
 
     private float popupTime;
 
+    int healthLvl;
+
     private Player player;
 
     void Awake()
@@ -39,6 +41,7 @@ public class WeaponUI : MonoBehaviour
     {
         levelText.text = "Level " + player.currentLevel.ToString();
         //Životy
+        healthbar.maxValue = player.healthSystem.GetMaxHealth();
         healthbar.value = player.healthSystem.GetHealth();
         healthText.text = player.healthSystem.GetHealth().ToString();
         //Štít
