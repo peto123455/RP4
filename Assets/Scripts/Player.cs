@@ -272,7 +272,7 @@ public class Player : MonoBehaviour
 
     private void Pickup()
     {
-        GameObject weaponObject = CheckGround();
+        GameObject weaponObject = CheckSuround(weaponLayer);
         if(weaponObject != null)
         {
             PickupScript pickup = weaponObject.GetComponent<PickupScript>();
@@ -292,16 +292,16 @@ public class Player : MonoBehaviour
         }
     }
 
-    private GameObject CheckGround()
+    private GameObject CheckSuround(LayerMask layer, float distance = 1f)
     {
-        RaycastHit2D ray1 = Physics2D.Raycast(gameObject.transform.position, Vector2.up, 1f, weaponLayer);
-        RaycastHit2D ray2 = Physics2D.Raycast(gameObject.transform.position, Vector2.left, 1f, weaponLayer);
-        RaycastHit2D ray3 = Physics2D.Raycast(gameObject.transform.position, Vector2.down, 1f, weaponLayer);
-        RaycastHit2D ray4 = Physics2D.Raycast(gameObject.transform.position, Vector2.right, 1f, weaponLayer);
-        RaycastHit2D ray5 = Physics2D.Raycast(gameObject.transform.position, new Vector2(1f, 1f), 1f, weaponLayer);
-        RaycastHit2D ray6 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-1f, -1f), 1f, weaponLayer);
-        RaycastHit2D ray7 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-1f, 1f), 1f, weaponLayer);
-        RaycastHit2D ray8 = Physics2D.Raycast(gameObject.transform.position, new Vector2(1f, -1f), 1f, weaponLayer);
+        RaycastHit2D ray1 = Physics2D.Raycast(gameObject.transform.position, new Vector2(distance,  0f), 1f, layer);
+        RaycastHit2D ray2 = Physics2D.Raycast(gameObject.transform.position, new Vector2(0f,        distance), 1f, layer);
+        RaycastHit2D ray3 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-distance, 0f), 1f, layer);
+        RaycastHit2D ray4 = Physics2D.Raycast(gameObject.transform.position, new Vector2(0f,        -distance), 1f, layer);
+        RaycastHit2D ray5 = Physics2D.Raycast(gameObject.transform.position, new Vector2(distance,  distance), 1f, layer);
+        RaycastHit2D ray6 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-distance, -distance), 1f, layer);
+        RaycastHit2D ray7 = Physics2D.Raycast(gameObject.transform.position, new Vector2(-distance, distance), 1f, layer);
+        RaycastHit2D ray8 = Physics2D.Raycast(gameObject.transform.position, new Vector2(distance,  -distance), 1f, layer);
 
         List<RaycastHit2D> rays = new List<RaycastHit2D>(){ray1, ray2, ray3, ray4, ray5, ray6, ray7, ray8};
 
@@ -389,9 +389,46 @@ public class Player : MonoBehaviour
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
-        speedAnimation = Mathf.Abs(horizontal) + Mathf.Abs(vertical);
-        feet.SetFloat("Speed", speedAnimation);
-        rb.velocity = new Vector2(horizontal * speed, vertical * speed);
+        
+        float horizontalSpeed;
+        float verticalSpeed;
+
+        if(horizontal != 0f || vertical != 0f)
+        {
+            horizontalSpeed = horizontal * speed;
+            verticalSpeed = vertical * speed;
+
+            if(Input.GetKey(KeyCode.LeftShift)) //Chôdza
+            {
+                horizontalSpeed = horizontalSpeed / 2f;
+                verticalSpeed = verticalSpeed / 2f;
+                speedAnimation = (Mathf.Abs(horizontal) + Mathf.Abs(vertical)) / 2f;
+                feet.speed = 0.4f;
+            }
+            else //Šprint
+            {
+                speedAnimation = Mathf.Abs(horizontal) + Mathf.Abs(vertical);
+                feet.speed = 1f;
+
+                foreach(Enemy enemy in Enemy.GetEnemyList())
+                {
+                    if(enemy != null && Vector2.Distance(transform.position, enemy.transform.position) < 5f)
+                    {
+                        enemy.TurnAtObject(gameObject, false);
+                    }
+                }
+            }
+
+            feet.SetFloat("Speed", speedAnimation);
+        }
+        else
+        {
+            horizontalSpeed = 0f;
+            verticalSpeed = 0f;
+            feet.SetFloat("Speed", 0);
+        }
+
+        rb.velocity = new Vector2(horizontalSpeed, verticalSpeed);
     }
 
     private void GadgetMovement()

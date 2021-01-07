@@ -63,17 +63,7 @@ public class PauseMenu : MonoBehaviour
 
     public void NextLevel()
     {
-        GameObject.Find("Player").GetComponent<Player>().SaveGame();
-        int nextLevel = PlayerPrefs.GetInt("level", 1) + 1;
-        PlayerPrefs.SetInt("level", nextLevel);
-        SceneManager.LoadScene(nextLevel);
-    }
-
-    public void SaveOnly()
-    {
-        GameObject.Find("Player").GetComponent<Player>().SaveGame();
-        int nextLevel = PlayerPrefs.GetInt("level", 1) + 1;
-        PlayerPrefs.SetInt("level", nextLevel);  
+        SceneManager.LoadScene(PlayerPrefs.GetInt("level", 1));
     }
 
     public void Resume()
@@ -95,9 +85,12 @@ public class PauseMenu : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(PlayerPrefs.GetInt("level"));
         Time.timeScale = 1f;
         isPaused = false;
+
+        Enemy.enemyList.Clear();
+
+        SceneManager.LoadScene(PlayerPrefs.GetInt("level"));
     }
 
     public void Quit()

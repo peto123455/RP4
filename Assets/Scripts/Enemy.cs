@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPistol;
+    [SerializeField] private bool isDeaf = false;
     //private int health = 100;
     private float fov;
     private float timer = 0;
@@ -18,10 +19,18 @@ public class Enemy : MonoBehaviour
     private AudioSource sound;
     public HealthSystem healthSystem;
 
+    public static List<Enemy> enemyList = new List<Enemy>();
+
+    public static List<Enemy> GetEnemyList()
+    {
+        return enemyList;
+    }
+
     private BulletList bulletList = new BulletList();
 
     void Awake()
     {
+        enemyList.Add(this);
         fov = 90f;
         viewDistance = 14f;
         sounds = new Sounds();
@@ -52,8 +61,10 @@ public class Enemy : MonoBehaviour
             RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle), viewDistance, layerMask);
             if (ray.collider != null && ray.collider.tag == "Player")
             {
-                float playerAngle = Mathf.Atan2(ray.collider.transform.position.x - gameObject.transform.position.x, ray.collider.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
-                gameObject.transform.rotation = Quaternion.Euler(0, 0, -playerAngle);
+                /*float playerAngle = Mathf.Atan2(ray.collider.transform.position.x - gameObject.transform.position.x, ray.collider.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
+                gameObject.transform.rotation = Quaternion.Euler(0, 0, -playerAngle);*/
+
+                TurnAtObject(ray.collider.gameObject, true);
 
                 if(Time.time > timer)
                 {
@@ -108,6 +119,8 @@ public class Enemy : MonoBehaviour
 
     public void OnDeath() //Funkcia vykonaná pri smrti
     {
+        enemyList.Remove(this);
+
         GameObject gun = Instantiate(gunPrefab, transform.position, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
         gun.GetComponent<PickupScript>().SetItem(holdingGun, wl.GetWeaponByID(holdingGun).maxMagazine);
         Destroy(gameObject); //Zničenie objektu nepriateľa
@@ -116,5 +129,12 @@ public class Enemy : MonoBehaviour
     public void SetDirection(float aimDirection) //Funkcia slúžiaca na nastavenie rotácie FOV
     {
         startingAngle = aimDirection +90f + fov / 2f;
+    }
+
+    public void TurnAtObject(GameObject obj, bool overrideDeaf = true)
+    {
+        if(isDeaf && !overrideDeaf) return;
+        float playerAngle = Mathf.Atan2(obj.transform.position.x - gameObject.transform.position.x, obj.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
+        gameObject.transform.rotation = Quaternion.Euler(0, 0, -playerAngle);
     }
 }

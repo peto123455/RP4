@@ -827,6 +827,10 @@ PrefabInstance:
       value: -54.311
       objectReference: {fileID: 0}
     - target: {fileID: 7211625179603282522, guid: f66a283dd865e0e428584a82b2b9414a, type: 3}
+      propertyPath: isDeaf
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7211625179603282522, guid: f66a283dd865e0e428584a82b2b9414a, type: 3}
       propertyPath: holdingGun
       value: 2
       objectReference: {fileID: 0}
@@ -2807,8 +2811,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7364017912584130933, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
       propertyPath: text
-      value: Enemies can't see you if you are behind them. Use LMB to kill him from
-        behind.
+      value: Enemies can't see you if you are behind them, but they can hear you.
+        Use L.Shift to sneak and LMB to kill him from behind.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364017912584130933, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
+      propertyPath: time
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7364017912584130934, guid: 298b12c2b465c9a48baadd561737d361, type: 3}
       propertyPath: m_Size.x
