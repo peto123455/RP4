@@ -267,6 +267,13 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && wl.selected.id != 0) ReloadGun(wl.selected); //Reload
         else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
         else if(Input.GetKeyDown(KeyCode.Tab)) Pickup();
+        else if(Input.GetKeyDown(KeyCode.F)) SwapHand();
+    }
+
+    private void SwapHand()
+    {
+        if(gameObject.transform.localScale.x == -1f) gameObject.transform.localScale = new Vector3(1f, 1f, 0f);
+        else gameObject.transform.localScale = new Vector3(-1f, 1f, 0f);
     }
 
     private void Pickup()
