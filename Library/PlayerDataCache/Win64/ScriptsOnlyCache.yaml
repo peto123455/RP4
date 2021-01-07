@@ -941,7 +941,7 @@ ScriptsOnlyBuild:
     className: Benchmark03
   - hash:
       serializedVersion: 2
-      Hash: 9350278ebc84b1ccee02802a7ff398ec
+      Hash: 1f39bc5e6be099760c7cd0b754ab2aaf
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Enemy

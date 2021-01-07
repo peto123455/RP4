@@ -371,10 +371,11 @@ public class Player : MonoBehaviour
 
     private void SelectWeapon(Weapon weapon) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
     {
-        if(weapon == null) return;
+        if(weapon == null || wl.selected == weapon) return;
         body.SetInteger("item", weapon.id); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
         //holdingItem = weapon.id;
         wl.selected = weapon;
+        sounds.PlaySound(weapon.drawSound, sound);
     }
 
     private void CheckPlayerStatus()
