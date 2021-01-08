@@ -5,4 +5,5 @@ using UnityEngine;
 public static class GlobalValues
 {
     public const byte WEAPONS_COUNT = 4;
+    public static int difficulty;
 }

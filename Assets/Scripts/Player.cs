@@ -511,6 +511,7 @@ public class Player : MonoBehaviour
         healthSystem.SetHealth(PlayerPrefs.GetInt("health", 100));
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         healthSystem.SetMaxHealth(100 + PlayerPrefs.GetInt("healthLvl", 0) * 5);
+        GlobalValues.difficulty = PlayerPrefs.GetInt("difficulty", 0);
         money = PlayerPrefs.GetInt("money", 0);
 
         if(PlayerPrefs.GetInt("primary", 0) != 0) wl.primary = wl.GetWeaponByID(PlayerPrefs.GetInt("primary", 0));

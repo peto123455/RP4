@@ -18,10 +18,11 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void StartNewGame() //Funkcia, ktorá sa zavolá po stlačení tlačidla "New Game"
+    public void StartNewGame(int difficulty) //Funkcia, ktorá sa zavolá po stlačení tlačidla "New Game"
     {
         if(isKeyChecked)
         {
+            PlayerPrefs.SetInt("difficulty", difficulty);
             CreateGame();
             SceneManager.LoadScene(1); //Načítanie scény s indexom 1
         }

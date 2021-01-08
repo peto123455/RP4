@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour
         else if(collision.collider.tag == "Player")
         {
             Player player = collision.collider.GetComponent<Player>();
-            player.healthSystem.TakeDamage(damage/3, critical, shooter);
+            player.healthSystem.TakeDamage(damage/(3-GlobalValues.difficulty), critical, shooter);
 
             GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
             Destroy(bloodInstance, 2f);
