@@ -7,7 +7,7 @@ public class FOV : MonoBehaviour
     /* Deklarácia premenných */
     [SerializeField] private LayerMask layerMask;
     private Mesh mesh;
-    [SerializeField] private float fov = 145f;
+    private float fov;
     [SerializeField] private float viewDistance = 15f;
     [SerializeField] int rayCount = 250;
     private Vector3 position;
@@ -24,6 +24,8 @@ public class FOV : MonoBehaviour
 
     private void LateUpdate() //Update, ktorý sa vykonáva po Update
     {
+        fov = 140f + GlobalValues.fov * 4;
+
         float angle = startingAngle; //Počiatočný uhol
         float angleIncrease = fov / rayCount; //Slúži na rovnomerné rozloženie rayov
 

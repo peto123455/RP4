@@ -7,8 +7,8 @@ public class Shop : MonoBehaviour
 {
     private Sounds sounds;
 
-    [SerializeField] Text   moneyText, healthPriceText, shieldPriceText;
-    [SerializeField] Slider healthSlider, shieldSlider;
+    [SerializeField] Text   moneyText, healthPriceText, shieldPriceText, fovPriceText;
+    [SerializeField] Slider healthSlider, shieldSlider, fovSlider;
 
     int money = 0;
 
@@ -28,6 +28,7 @@ public class Shop : MonoBehaviour
         items.Clear();
         items.Add(new ShopItem("healthLvl", new int[] {10,20,50,100,200}, healthPriceText, healthSlider)); //Health
         items.Add(new ShopItem("shieldLvl", new int[] {10,20,50,100,200}, shieldPriceText, shieldSlider)); //Shield
+        items.Add(new ShopItem("fovLvl", new int[] {10,20,30,50,100}, fovPriceText, fovSlider)); //FOV
     }
 
     private void Refresh()

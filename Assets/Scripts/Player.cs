@@ -527,7 +527,8 @@ public class Player : MonoBehaviour
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         healthSystem.SetMaxHealth(100 + PlayerPrefs.GetInt("healthLvl", 0) * 5);
         healthSystem.SetMaxShield(100 + PlayerPrefs.GetInt("shieldLvl", 0) * 5);
-        GlobalValues.difficulty = PlayerPrefs.GetInt("difficulty", 0);
+        GlobalValues.fov = (byte) PlayerPrefs.GetInt("fovLvl", 0);
+        GlobalValues.difficulty = (byte) PlayerPrefs.GetInt("difficulty", 0);
         money = PlayerPrefs.GetInt("money", 0);
 
         if(PlayerPrefs.GetInt("primary", 0) != 0) wl.primary = wl.GetWeaponByID(PlayerPrefs.GetInt("primary", 0));
