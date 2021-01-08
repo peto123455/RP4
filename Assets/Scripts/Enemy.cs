@@ -6,8 +6,8 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private GameObject gunPrefab, floatingText;
     [SerializeField] private int holdingGun = 2;
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField] private Transform firePoint;
+    [SerializeField] private LayerMask layerMask, collision;
+    [SerializeField] private Transform firePoint, firePointO;
     [SerializeField] private GameObject bulletPistol;
     [SerializeField] private bool isDeaf = false;
     //private int health = 100;
@@ -52,6 +52,7 @@ public class Enemy : MonoBehaviour
     {
         SetDirection(gameObject.transform.rotation.eulerAngles.z);
 
+        viewDistance = 14f + (GlobalValues.difficulty * 2f);
         int rayCount = 20;
         float angle = startingAngle;
         float angleIncrease = fov / rayCount;
@@ -81,12 +82,24 @@ public class Enemy : MonoBehaviour
         {
             if(wl.weapons[holdingGun].GetMagazine() > 0)
             {
+                CheckSight();
                 Shoot(wl.weapons[holdingGun]);
                 TakeAmmo(wl.weapons[holdingGun], 1);
                 sounds.PlaySound(wl.weapons[holdingGun].sound, sound);
                 timer = Time.time + wl.weapons[holdingGun].cooldownTime;
             }
             else ReloadWeapon(wl.weapons[holdingGun]);
+        }
+    }
+
+    private void CheckSight()
+    {
+        RaycastHit2D ray = Physics2D.Raycast(firePoint.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), 1f, collision);
+        if(ray.collider != null)
+        {
+            RaycastHit2D rayO = Physics2D.Raycast(firePointO.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), 1f, collision);
+            Debug.DrawRay(firePointO.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), Color.green, 1f);
+            if(rayO.collider == null) gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, 1f, 0f);
         }
     }
 

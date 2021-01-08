@@ -74,10 +74,10 @@ public class PickupScript : MonoBehaviour
             case 102: //Vesta
                 if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
                 {
-                    if(collision.gameObject.GetComponent<HealthSystem>().GetArmor() < 100)
+                    if(collision.gameObject.GetComponent<HealthSystem>().GetArmor() < collision.gameObject.GetComponent<HealthSystem>().GetMaxShield())
                     {
                         ShowText("Armor replenished", 1.5f, 0);
-                        collision.gameObject.GetComponent<HealthSystem>().SetArmor(100);
+                        collision.gameObject.GetComponent<HealthSystem>().SetShieldToMax();
                         collision.gameObject.GetComponent<Player>().sounds.PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
                         Destroy(gameObject);
                     }

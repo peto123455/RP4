@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     /* Deklarácia premenných a objektov */
 
     [SerializeField] private FOV fov;
-    [SerializeField] private Transform firePoint, fireCheckPoint;
+    [SerializeField] private Transform firePoint, fireCheckPoint, CPM, CPL, CPR;
     [SerializeField] private PauseMenu menu;
     [SerializeField] private GameObject timerIns, itemPrefab;
 
@@ -106,7 +106,7 @@ public class Player : MonoBehaviour
         {
             UpdateMousePos();
             /* Stará sa o nastavenie pozície a rotácie FOV */
-            fov.SetPosition(transform.position);
+            FOVMovement();
             if(controlState == ControlState.Player) fov.SetDirection((Mathf.Atan2(mouseVec.x, mouseVec.y) * Mathf.Rad2Deg) - 90f);
         }
     }
@@ -187,6 +187,20 @@ public class Player : MonoBehaviour
 
         Rigidbody2D rbBullet = bulletPrefab.GetComponent<Rigidbody2D>();
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
+    }
+
+    private void FOVMovement()
+    {
+        RaycastHit2D ray = Physics2D.Raycast(CPM.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 0.5f, collisionLayer);
+        if(ray.collider != null)
+        {
+            RaycastHit2D rayL = Physics2D.Raycast(CPL.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 0.5f, collisionLayer);
+            RaycastHit2D rayR = Physics2D.Raycast(CPR.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 0.5f, collisionLayer);
+            if(rayL.collider != null && rayR.collider != null) fov.SetPosition(transform.position);
+            else if(rayL.collider != null) fov.SetPosition(CPR.transform.position);
+            else fov.SetPosition(CPL.transform.position);
+        }
+        else fov.SetPosition(transform.position);
     }
 
     private void ReloadGun(Weapon weapon) /* Funkcia, ktorá prebije zbraň */
@@ -272,8 +286,9 @@ public class Player : MonoBehaviour
 
     private void SwapHand()
     {
-        if(gameObject.transform.localScale.x == -1f) gameObject.transform.localScale = new Vector3(1f, 1f, 0f);
-        else gameObject.transform.localScale = new Vector3(-1f, 1f, 0f);
+        //if(gameObject.transform.localScale.x == -1f) gameObject.transform.localScale = new Vector3(1f, 1f, 0f);
+        //else 
+        gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, 1f, 0f);
     }
 
     private void Pickup()
@@ -413,7 +428,7 @@ public class Player : MonoBehaviour
 
                 foreach(Enemy enemy in Enemy.GetEnemyList())
                 {
-                    if(enemy != null && Vector2.Distance(transform.position, enemy.transform.position) < 5f)
+                    if(enemy != null && Vector2.Distance(transform.position, enemy.transform.position) < (4.5f + GlobalValues.difficulty))
                     {
                         enemy.TurnAtObject(gameObject, false);
                     }
@@ -511,6 +526,7 @@ public class Player : MonoBehaviour
         healthSystem.SetHealth(PlayerPrefs.GetInt("health", 100));
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         healthSystem.SetMaxHealth(100 + PlayerPrefs.GetInt("healthLvl", 0) * 5);
+        healthSystem.SetMaxShield(100 + PlayerPrefs.GetInt("shieldLvl", 0) * 5);
         GlobalValues.difficulty = PlayerPrefs.GetInt("difficulty", 0);
         money = PlayerPrefs.GetInt("money", 0);
 

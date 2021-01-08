@@ -45,6 +45,7 @@ public class WeaponUI : MonoBehaviour
         healthbar.value = player.healthSystem.GetHealth();
         healthText.text = player.healthSystem.GetHealth().ToString();
         //Štít
+        shieldbar.maxValue = player.healthSystem.GetMaxShield();
         shieldbar.value = player.healthSystem.GetArmor();
         shieldText.text = player.healthSystem.GetArmor().ToString();
         //Peniaze

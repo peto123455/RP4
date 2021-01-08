@@ -60,6 +60,7 @@ ScriptsOnlyBuild:
     - UnityEngine.Rendering.UI.DebugUIHandlerVector4
     - UnityEngine.Rendering.UI.UIFoldout
     Unity.RenderPipelines.Universal.Editor.dll:
+    - UnityEditor.Rendering.Universal.ScriptableRendererFeatureEditor
     - UnityEditor.Rendering.Universal.UniversalProjectSettings
     Unity.RenderPipelines.Universal.Runtime.dll:
     - UnityEngine.Experimental.Rendering.Universal.RenderObjects
@@ -80,8 +81,10 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -712,7 +715,7 @@ ScriptsOnlyBuild:
     className: ActivationTrack
   - hash:
       serializedVersion: 2
-      Hash: 43da76d070539193acaeb1a0ae8fff95
+      Hash: abab11f37243762820435e1d43bbda9f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: HealthSystem
@@ -790,7 +793,7 @@ ScriptsOnlyBuild:
     className: GridLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 121c87a44863831801e0f14711ed0547
+      Hash: f9894595153d6aa2fbd74902454cc28d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Shop
@@ -946,7 +949,7 @@ ScriptsOnlyBuild:
     className: Benchmark03
   - hash:
       serializedVersion: 2
-      Hash: 1f39bc5e6be099760c7cd0b754ab2aaf
+      Hash: b5fcb69b22a96d2fa2196a969925fa2e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Enemy
@@ -1168,7 +1171,7 @@ ScriptsOnlyBuild:
     className: FloatingScript
   - hash:
       serializedVersion: 2
-      Hash: 6161f62768e2eca5e46584becde9642f
+      Hash: 5b294ebb4e1fd53b1c2b72d643305cf8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
