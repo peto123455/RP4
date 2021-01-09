@@ -198,11 +198,17 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 746}
     - Class: 114
+      Script: {instanceID: 11940}
+    - Class: 114
       Script: {instanceID: 11944}
     - Class: 114
       Script: {instanceID: 11946}
     - Class: 114
       Script: {instanceID: 11948}
+    - Class: 114
+      Script: {instanceID: 11950}
+    - Class: 114
+      Script: {instanceID: 11952}
     - Class: 114
       Script: {instanceID: 11954}
     - Class: 114
@@ -212,6 +218,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12104}
     - Class: 114
+      Script: {instanceID: 12238}
+    - Class: 114
       Script: {instanceID: 12356}
     - Class: 114
       Script: {instanceID: 12446}
@@ -220,11 +228,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12720}
     - Class: 114
+      Script: {instanceID: 12862}
+    - Class: 114
       Script: {instanceID: 12954}
     - Class: 114
       Script: {instanceID: 13220}
     - Class: 114
       Script: {instanceID: 13276}
+    - Class: 114
+      Script: {instanceID: 13338}
     - Class: 114
       Script: {instanceID: 13568}
     - Class: 114
@@ -232,9 +244,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 14194}
     - Class: 114
+      Script: {instanceID: 14222}
+    - Class: 114
       Script: {instanceID: 14904}
     - Class: 114
       Script: {instanceID: 14950}
+    - Class: 114
+      Script: {instanceID: 15296}
     - Class: 114
       Script: {instanceID: 15300}
     - Class: 114
@@ -245,6 +261,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 16246}
     - Class: 114
       Script: {instanceID: 16752}
+    - Class: 114
+      Script: {instanceID: 16970}
     - Class: 114
       Script: {instanceID: 17026}
     - Class: 115
@@ -325,11 +343,17 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 746}
     - Class: 114
+      Script: {instanceID: 11940}
+    - Class: 114
       Script: {instanceID: 11944}
     - Class: 114
       Script: {instanceID: 11946}
     - Class: 114
       Script: {instanceID: 11948}
+    - Class: 114
+      Script: {instanceID: 11950}
+    - Class: 114
+      Script: {instanceID: 11952}
     - Class: 114
       Script: {instanceID: 11954}
     - Class: 114
@@ -339,6 +363,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12104}
     - Class: 114
+      Script: {instanceID: 12238}
+    - Class: 114
       Script: {instanceID: 12356}
     - Class: 114
       Script: {instanceID: 12446}
@@ -347,11 +373,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12720}
     - Class: 114
+      Script: {instanceID: 12862}
+    - Class: 114
       Script: {instanceID: 12954}
     - Class: 114
       Script: {instanceID: 13220}
     - Class: 114
       Script: {instanceID: 13276}
+    - Class: 114
+      Script: {instanceID: 13338}
     - Class: 114
       Script: {instanceID: 13568}
     - Class: 114
@@ -359,9 +389,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 14194}
     - Class: 114
+      Script: {instanceID: 14222}
+    - Class: 114
       Script: {instanceID: 14904}
     - Class: 114
       Script: {instanceID: 14950}
+    - Class: 114
+      Script: {instanceID: 15296}
     - Class: 114
       Script: {instanceID: 15300}
     - Class: 114
@@ -370,6 +404,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 16246}
     - Class: 114
       Script: {instanceID: 16752}
+    - Class: 114
+      Script: {instanceID: 16970}
     - Class: 114
       Script: {instanceID: 17026}
     - Class: 115
@@ -425,6 +461,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
     - Class: 83
       Script: {instanceID: 0}
     - Class: 104
@@ -461,6 +499,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12566}
     - Class: 114
       Script: {instanceID: 12634}
+    - Class: 114
+      Script: {instanceID: 12720}
     - Class: 114
       Script: {instanceID: 12862}
     - Class: 114
@@ -694,7 +734,7 @@ ScriptsOnlyBuild:
     className: DebugUIHandlerVBox
   - hash:
       serializedVersion: 2
-      Hash: d316dd965659b2eece9453e31a93810e
+      Hash: 348273cfc98e7e5aa2db6c3fac54aea2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PauseMenu

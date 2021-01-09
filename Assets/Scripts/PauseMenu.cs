@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public bool isPaused = false;
-    [SerializeField] private GameObject pauseMenu, deathMenu, completeMenu, UI;
+    [SerializeField] private GameObject pauseMenu, deathMenu, completeMenu, settingsMenu, UI;
 
     void Awake()
     {
@@ -32,6 +32,7 @@ public class PauseMenu : MonoBehaviour
             pauseMenu.SetActive(true);
             deathMenu.SetActive(false);
             completeMenu.SetActive(false);
+            settingsMenu.SetActive(false);
 
             UI.SetActive(false);
         }
@@ -45,6 +46,7 @@ public class PauseMenu : MonoBehaviour
         deathMenu.SetActive(true);
         pauseMenu.SetActive(false);
         completeMenu.SetActive(false);
+        settingsMenu.SetActive(false);
 
         UI.SetActive(false);
     }
@@ -57,6 +59,7 @@ public class PauseMenu : MonoBehaviour
         deathMenu.SetActive(false);
         pauseMenu.SetActive(false);
         completeMenu.SetActive(true);
+        settingsMenu.SetActive(false);
 
         UI.SetActive(false);
     }
@@ -74,6 +77,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         deathMenu.SetActive(false);
         completeMenu.SetActive(false);
+        settingsMenu.SetActive(false);
 
         UI.SetActive(true);
     }
