@@ -7,11 +7,11 @@ public class FOV : MonoBehaviour
     /* Deklarácia premenných */
     [SerializeField] private LayerMask layerMask;
     private Mesh mesh;
-    [SerializeField] private float fov;
+    [SerializeField] private float fov = 140;
     [SerializeField] private float viewDistance = 15f;
     [SerializeField] int rayCount = 250;
     private Vector3 position;
-    private float startingAngle;
+    private float startingAngle, fovP;
 
     private void Start()
     {
@@ -24,7 +24,7 @@ public class FOV : MonoBehaviour
 
     private void LateUpdate() //Update, ktorý sa vykonáva po Update
     {
-        float fovP = fov + GlobalValues.fov * 4;
+        fovP = fov + GlobalValues.fov * 4;
         if(fovP > 360f) fovP = 360f;
 
         float angle = startingAngle; //Počiatočný uhol
@@ -76,6 +76,6 @@ public class FOV : MonoBehaviour
 
     public void SetDirection(float aimDirection) //Funkcia slúžiaca na nastavenie rotácie FOV
     {
-        startingAngle = -aimDirection + fov / 2f;
+        startingAngle = -aimDirection + fovP / 2f;
     }
 }

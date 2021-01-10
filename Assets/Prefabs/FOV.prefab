@@ -48,6 +48,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 512
+  fov: 140
+  viewDistance: 15
+  rayCount: 250
 --- !u!33 &7634626033449565348
 MeshFilter:
   m_ObjectHideFlags: 0
