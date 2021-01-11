@@ -26,9 +26,14 @@ public class GameAuth : MonoBehaviour
 
         using(UnityWebRequest webRequest = UnityWebRequest.Get("http://13.49.138.187/gameAuth.php?gameKey=" + Key)) //Odosielam web request na môj veb, ktorý overí kľúč
         {
+            webRequest.timeout = 60;
             yield return webRequest.SendWebRequest();
 
-            if(webRequest.downloadHandler.text == "true") //Authenticate(true, autoLogin);
+            if (webRequest.isNetworkError || webRequest.isHttpError)
+            {
+                errorMessage.text = "Oops, something went wrong !";
+            }
+            else if(webRequest.downloadHandler.text == "true") //Authenticate(true, autoLogin);
             {
                 if(!autoLogin)PlayerPrefs.SetString("key", inputField.text);
                 main.SetActive(true);
