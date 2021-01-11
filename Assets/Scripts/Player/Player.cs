@@ -18,10 +18,12 @@ public class Player : MonoBehaviour
     [SerializeField] private PauseMenu menu;
     [SerializeField] private GameObject timerIns, itemPrefab;
 
+    public Money money;
+
     public Animator feet, body;
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
-    public int currentLevel, money;
+    public int currentLevel;
     public LayerMask enemyLayer, collisionLayer, weaponLayer;
     private AudioSource sound = new AudioSource();
 
@@ -113,17 +115,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() /* Funkcia, ktorá sa pravidelne vykonáva nezávisle od počtu snímkov za sekundu */
     {
-        /*if(controlState == ControlState.Player)
-        {
-            Movement(); //Pohyb hráča
-            if(gadget != null) gadget.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
-        }
-        else if(controlState == ControlState.Gadget)
-        {
-            GadgetMovement();
-            rb.velocity = new Vector2(0f, 0f);
-            feet.SetFloat("Speed", 0);
-        }*/
         UpdateCooldowns();
         CheckPlayerStatus();
     }
@@ -286,8 +277,6 @@ public class Player : MonoBehaviour
 
     private void SwapHand()
     {
-        //if(gameObject.transform.localScale.x == -1f) gameObject.transform.localScale = new Vector3(1f, 1f, 0f);
-        //else 
         gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, 1f, 0f);
     }
 
@@ -357,11 +346,7 @@ public class Player : MonoBehaviour
     private void GadgetControl()
     {
         if(gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget && gadgets.equippedGadget.isSpawned)
-        {
-            /*if(controlState == ControlState.Player) controlState = ControlState.Gadget;
-            else controlState = ControlState.Player;*/
-            controlState = controlState == ControlState.Player ? ControlState.Gadget : ControlState.Player;
-        }
+        controlState = controlState == ControlState.Player ? ControlState.Gadget : ControlState.Player;
         else controlState = ControlState.Player;
     }
 
@@ -388,7 +373,6 @@ public class Player : MonoBehaviour
     {
         if(weapon == null || wl.selected == weapon) return;
         body.SetInteger("item", weapon.id); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
-        //holdingItem = weapon.id;
         wl.selected = weapon;
         sounds.PlaySound(weapon.drawSound, sound);
     }
@@ -463,21 +447,6 @@ public class Player : MonoBehaviour
         mouseVec = mousePos - rb.position;
     }
 
-    public void GiveMoney(int money)
-    {
-        this.money += money;
-    }
-
-    public void SetMoney(int money)
-    {
-        this.money = money;
-    }
-
-    public void TakeMoney(int money)
-    {
-        this.money = money;
-    }
-
     public void OnDeath()
     {
         menu.ShowDeathMenu();
@@ -529,7 +498,7 @@ public class Player : MonoBehaviour
         healthSystem.SetMaxShield(100 + PlayerPrefs.GetInt("shieldLvl", 0) * 5);
         GlobalValues.fov = (byte) PlayerPrefs.GetInt("fovLvl", 0);
         GlobalValues.difficulty = (byte) PlayerPrefs.GetInt("difficulty", 0);
-        money = PlayerPrefs.GetInt("money", 0);
+        money.SetMoney(PlayerPrefs.GetInt("money", 0));
 
         if(PlayerPrefs.GetInt("primary", 0) != 0) wl.primary = wl.GetWeaponByID(PlayerPrefs.GetInt("primary", 0));
         if(PlayerPrefs.GetInt("secondary", 0) != 0) wl.secondary = wl.GetWeaponByID(PlayerPrefs.GetInt("secondary", 0));
@@ -555,7 +524,7 @@ public class Player : MonoBehaviour
     {
         PlayerPrefs.SetInt("health", healthSystem.GetHealth());
         PlayerPrefs.SetInt("armor", healthSystem.GetArmor());
-        PlayerPrefs.SetInt("money", money);
+        PlayerPrefs.SetInt("money", money.GetMoney());
 
         if(wl.primary != null) PlayerPrefs.SetInt("primary", wl.primary.id);
         else PlayerPrefs.SetInt("primary", 0);

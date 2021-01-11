@@ -26,14 +26,23 @@ public class HealthSystem : MonoBehaviour
         else health -= damage;
         if(health <= 0)
         {
+            OnDeath(shotBy);
+        }
+    }
+
+    private void OnDeath(GameObject killedBy = null)
+    {
+        if(killedBy != null)
+        {
             if(gameObject.GetComponent<Player>() != null) gameObject.GetComponent<Player>().OnDeath();
             else if(gameObject.GetComponent<Enemy>() != null)
             {
-                if (shotBy != null && shotBy.tag == "Player") shotBy.GetComponent<Player>().GiveMoney(10); 
+                if (killedBy.tag == "Player") killedBy.GetComponent<Player>().money.GiveMoney(10); 
                 gameObject.GetComponent<Enemy>().OnDeath();
             }
         }
     }
+
     public void SetHealth(int health)
     {
         this.health = health;
