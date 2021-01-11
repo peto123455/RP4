@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] private PauseMenu menu;
     [SerializeField] private GameObject timerIns, itemPrefab;
 
-    public Money money;
+    public Money money = new Money();
 
     public Animator feet, body;
     public float speed = 5.0f;

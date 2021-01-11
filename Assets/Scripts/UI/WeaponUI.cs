@@ -49,7 +49,7 @@ public class WeaponUI : MonoBehaviour
         shieldbar.value = player.healthSystem.GetArmor();
         shieldText.text = player.healthSystem.GetArmor().ToString();
         //Peniaze
-        moneyText.text = player.money.ToString();
+        moneyText.text = player.money.GetMoney().ToString();
         //Zbrane
         Weapon weapon = player.wl.GetHoldingWeapon();
         if(weapon.id == 0)
