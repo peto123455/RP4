@@ -59,7 +59,7 @@ public class Settings : MonoBehaviour
         SetResolution(resolutionDropdown.value);
 
         /* Uloží nastavenia */
-        PlayerPrefs.SetInt("fullscreen", BoolToInt(fullscreenToggle.isOn));
+        PlayerPrefs.SetInt("fullscreen", MathFunctions.BoolToInt(fullscreenToggle.isOn));
         PlayerPrefs.SetFloat("volume", volumeSlider.value);
 
         RefreshSettings(); //Len tak pre istotu
@@ -68,21 +68,11 @@ public class Settings : MonoBehaviour
     public void RefreshSettings()
     {
         volumeSlider.value = PlayerPrefs.GetFloat("volume", 0);
-        fullscreenToggle.isOn = IntToBool(PlayerPrefs.GetInt("fullscreen", 1));
+        fullscreenToggle.isOn = MathFunctions.IntToBool(PlayerPrefs.GetInt("fullscreen", 1));
     }
 
     public void Resolution()
     {
 
-    }
-
-    private bool IntToBool(int integer)
-    {
-        return integer == 1;
-    }
-
-    private int BoolToInt(bool boolean)
-    {
-        return boolean ? 1:0;
     }
 }
