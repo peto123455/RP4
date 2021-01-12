@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer, collisionLayer, weaponLayer;
     private AudioSource sound = new AudioSource();
 
-    private float speedAnimation;
+    //private float speedAnimation;
 
     //private int holdingItem = 0;
     private Vector2 mouseVec, mousePos;
@@ -387,27 +387,20 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        float horizontal = Input.GetAxisRaw("Horizontal"); 
         float vertical = Input.GetAxisRaw("Vertical");
         
-        float horizontalSpeed;
-        float verticalSpeed;
+        float currentSpeed = speed;
 
         if(horizontal != 0f || vertical != 0f)
         {
-            horizontalSpeed = horizontal * speed;
-            verticalSpeed = vertical * speed;
-
             if(Input.GetKey(KeyCode.LeftShift)) //Chôdza
             {
-                horizontalSpeed = horizontalSpeed / 2f;
-                verticalSpeed = verticalSpeed / 2f;
-                speedAnimation = (Mathf.Abs(horizontal) + Mathf.Abs(vertical)) / 2f;
+                currentSpeed = currentSpeed / 2f;
                 feet.speed = 0.4f;
             }
             else //Šprint
             {
-                speedAnimation = Mathf.Abs(horizontal) + Mathf.Abs(vertical);
                 feet.speed = 1f;
 
                 foreach(Enemy enemy in Enemy.GetEnemyList())
@@ -419,16 +412,11 @@ public class Player : MonoBehaviour
                 }
             }
 
-            feet.SetFloat("Speed", speedAnimation);
+            feet.SetBool("isWalking", true);
         }
-        else
-        {
-            horizontalSpeed = 0f;
-            verticalSpeed = 0f;
-            feet.SetFloat("Speed", 0);
-        }
+        else feet.SetBool("isWalking", false);
 
-        rb.velocity = new Vector2(horizontalSpeed, verticalSpeed);
+        rb.velocity = new Vector2(horizontal * currentSpeed, vertical * currentSpeed);
     }
 
     private void GadgetMovement()
