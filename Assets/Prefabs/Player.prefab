@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: -8456191915761850580}
   - component: {fileID: 2942035270510672958}
   - component: {fileID: 2899962274286425272}
+  - component: {fileID: 427007426084095853}
   m_Layer: 14
   m_Name: Player
   m_TagString: Player
@@ -172,7 +173,6 @@ MonoBehaviour:
   hitEffect: {fileID: 6272921440037399043, guid: e0dc7fd09395b2c44adb93bc7df67cf8, type: 3}
   floatingText: {fileID: 2714142670091362340, guid: d9dadd144badbf842afcc3a71c230658, type: 3}
   currentLevel: 0
-  money: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -363,7 +363,24 @@ MonoBehaviour:
   health: 100
   maxhealth: 0
   armor: 0
+  maxarmor: 0
   floatingText: {fileID: 2714142670091362340, guid: d9dadd144badbf842afcc3a71c230658, type: 3}
+--- !u!114 &427007426084095853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2382770942122379483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0865579bf93c6b042b93790f7731cf56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 0
+  timeLeft: 0
+  active: 0
+  instance: {fileID: 0}
 --- !u!1 &2382770943372008388
 GameObject:
   m_ObjectHideFlags: 0

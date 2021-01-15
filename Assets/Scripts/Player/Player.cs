@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private FOV fov;
     [SerializeField] private Transform firePoint, fireCheckPoint, CPM, CPL, CPR;
     [SerializeField] private PauseMenu menu;
-    [SerializeField] private GameObject timerIns, itemPrefab;
+    [SerializeField] public GameObject timerIns, itemPrefab;
 
     public Money money = new Money();
 
@@ -42,29 +42,21 @@ public class Player : MonoBehaviour
 
     private bool hasControl;
 
-    private class GadgetTimer
-    {
-        public float time, timeLeft;
-        public bool active;
-
-        public GadgetTimer(float time, bool active)
-        {
-            this.time = time;
-            this.timeLeft = time;
-            this.active = active;
-        }
-    }
-    private GadgetTimer gadgetTimer = new GadgetTimer(0f, false);
+    private GadgetTimer gadgetTimer;
 
     private BulletList bulletList = new BulletList();
 
+    public static Player player;
+
     void Start() /* Funkcia, ktorá sa volá pri spustení skriptu */
     {
+        player = this;
         rb = GetComponent<Rigidbody2D>(); /* Zoberie komponent Rigidbody2D a uloží ho do rb*/
         sounds = new Sounds();
         sound = GetComponent<AudioSource>();
         gadgets = GetComponent<Gadgets>();
         healthSystem = GetComponent<HealthSystem>();
+        gadgetTimer = GetComponent<GadgetTimer>();
 
         gadgets.SetGadget(gadgets.rcCar, true);
         gadgets.EquipGadget(gadgets.rcCar);
@@ -94,11 +86,10 @@ public class Player : MonoBehaviour
                 CheckKeysGadget();
                 GadgetMovement();
                 rb.velocity = new Vector2(0f, 0f);
-                feet.SetFloat("Speed", 0);
+                feet.SetBool("isWalking", false);
             }
 
             UniversalKeys();
-            UpdateGadgetTimer();
         }
     }
 
@@ -358,13 +349,13 @@ public class Player : MonoBehaviour
             {
                 gadget = Instantiate(gadgets.equippedGadget.prefab, gameObject.transform.position, Quaternion.identity);
                 gadgets.equippedGadget.isSpawned = true;
-                StartGadgetTimer(10f);
+                gadgetTimer.StartGadgetTimer(10f);
             }
             else if(Vector2.Distance(gameObject.transform.position, gadget.transform.position) < 2f)
             {
                 gadget.GetComponent<RC>().DestroyRC();
                 gadgets.equippedGadget.isSpawned = false;
-                StopGadgetTimer();
+                gadgetTimer.StopGadgetTimer();
             }
         }
     }
@@ -440,34 +431,7 @@ public class Player : MonoBehaviour
         menu.ShowDeathMenu();
     }
 
-    private void StartGadgetTimer(float time)
-    {
-        timerIns.GetComponent<Slider>().maxValue = time;
-        timerIns.GetComponent<Slider>().value = time;
-        gadgetTimer = new GadgetTimer(time, true);
-        timerIns.SetActive(true);
-        timerIns.transform.Find("BarText").gameObject.GetComponent<Text>().text = time.ToString();
-    }
-
-    private void StopGadgetTimer()
-    {
-        gadgetTimer.active = false;
-        timerIns.SetActive(false);
-        GadgetTimerStopped();
-    }
-
-    private void UpdateGadgetTimer()
-    {
-        if(gadgetTimer.active)
-        {
-            gadgetTimer.timeLeft -= Time.deltaTime;
-            timerIns.transform.Find("BarText").gameObject.GetComponent<Text>().text = ((int) gadgetTimer.timeLeft).ToString();
-            timerIns.GetComponent<Slider>().value = gadgetTimer.timeLeft;
-            if(gadgetTimer.timeLeft <= 0) StopGadgetTimer();
-        }
-    }
-
-    private void GadgetTimerStopped()
+    public void OnGadgetTimerStop()
     {
         gadget.GetComponent<RC>().DestroyRC();
         gadgets.equippedGadget.isSpawned = false;
