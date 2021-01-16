@@ -23,7 +23,7 @@ public class MainMenu : MonoBehaviour
         if(isKeyChecked)
         {
             PlayerPrefs.SetInt("difficulty", difficulty);
-            CreateGame();
+            SaveSystem.CreateGame();
             SceneManager.LoadScene(1); //Načítanie scény s indexom 1
         }
     }
@@ -33,10 +33,10 @@ public class MainMenu : MonoBehaviour
         Application.Quit(); //Ukončenie Hry
     }
 
-    private void CreateGame() // Nastaví zákl. hodnoty pre novú hru.
-    {
+    //private void CreateGame() // Nastaví zákl. hodnoty pre novú hru.
+    //{
         /* Základné */
-        PlayerPrefs.SetInt("level", 1);
+        /*PlayerPrefs.SetInt("level", 1);
         PlayerPrefs.SetInt("health", 100);
         PlayerPrefs.SetInt("armor", 0);
         PlayerPrefs.SetInt("money", 0);
@@ -57,7 +57,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("ammo" + weapon.id, 0);
         PlayerPrefs.SetInt("magazine" + weapon.id, 0);
         PlayerPrefs.SetInt("has" + weapon.id, 0);
-    }
+    }*/
 
     public void Continue()
     {

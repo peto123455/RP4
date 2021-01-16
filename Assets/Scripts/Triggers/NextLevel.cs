@@ -9,7 +9,7 @@ public class NextLevel : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            GameObject.Find("Player").GetComponent<Player>().SaveGame();
+            SaveSystem.SaveGame();
             int nextLevel = PlayerPrefs.GetInt("level", 1) + 1;
             PlayerPrefs.SetInt("level", nextLevel);  
 
