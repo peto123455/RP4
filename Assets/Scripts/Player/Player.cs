@@ -58,8 +58,8 @@ public class Player : MonoBehaviour
         healthSystem = GetComponent<HealthSystem>();
         gadgetTimer = GetComponent<GadgetTimer>();
 
-        gadgets.SetGadget(gadgets.rcCar, true);
-        gadgets.EquipGadget(gadgets.rcCar);
+        gadgets.SetGadget(gadgets.gadgets[0], true);
+        gadgets.EquipGadget(gadgets.gadgets[0]);
 
         SaveSystem.OnPlayerLoad();
         SaveSystem.LoadSave();
@@ -89,7 +89,11 @@ public class Player : MonoBehaviour
                 rb.velocity = new Vector2(0f, 0f);
                 feet.SetBool("isWalking", false);
             }
-
+            if (gadgets.equippedGadget.ReturnAction() == Gadget.Action.Laser && gadgets.equippedGadget.IsSpawned())
+            {
+                if(Check()) LaserGadget();
+                else LaserRender.Reset();
+            }
             UniversalKeys();
         }
     }
@@ -146,7 +150,7 @@ public class Player : MonoBehaviour
                     //if(checkRay.collider == null)
                     //{
                     wl.selected.SetCooldown(wl.selected.cooldownTime);
-                    if(checkRay.collider == null || checkRay2.collider == null) Shoot(wl.selected); //Podmienku mám iba tu, aby mal hráč pocit že vystrelil
+                    if(Check()) Shoot(wl.selected); //Podmienku mám iba tu, aby mal hráč pocit že vystrelil
                     wl.selected.magazine -= 1;
                     sounds.PlaySound(wl.selected.sound, sound);
                     body.Play(wl.selected.shootAnimationName);
@@ -155,6 +159,17 @@ public class Player : MonoBehaviour
                 else if (wl.selected.ammo > 0) ReloadGun(wl.selected);
             }
         }
+    }
+
+    private bool Check()
+    {
+        Vector2 rayDirection = MathFunctions.InvertVector(mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y));
+
+        RaycastHit2D checkRay = Physics2D.Raycast(firePoint.transform.position, rayDirection, 1f, collisionLayer); //Slúži na detekciu, či hráč sa nepokúša strielať cez stenu
+        RaycastHit2D checkRay2 = Physics2D.Raycast(fireCheckPoint.transform.position, rayDirection, 1f, collisionLayer); //Dodatočné overenie, ak stojí pri rohu steny
+
+        if(checkRay.collider == null || checkRay2.collider == null) return true;
+        return false;
     }
 
     void Shoot(Weapon weapon) /* Funkcia, ktorá sa vykoná ak zbraň je nabitá a pripravená k streľbe */
@@ -194,6 +209,7 @@ public class Player : MonoBehaviour
         {
             if(weapon == wl.GetWeaponByID(3)) //Nabíjanie brokovnice
             {
+                LaserRender.Override(true);
                 weapon.SetCooldown(weapon.cooldownReload);
                 sounds.PlaySound(5, sound);
                 body.Play(weapon.reloadAnimationName);
@@ -207,6 +223,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                LaserRender.Override(true);
                 weapon.SetCooldown(weapon.cooldownReload);
                 StartCoroutine(Reload(weapon, weapon.magazine, false));
                 sounds.PlaySound(2, sound);
@@ -219,12 +236,15 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
+        LaserRender.Override(false);
         sounds.PlaySound(sound, this.sound);
     }
 
     IEnumerator Reload(Weapon weapon, int currentAmmo, bool byOne)
     {
         yield return new WaitForSeconds(0.75f);
+
+        LaserRender.Override(false);
 
         if(weapon == wl.GetHoldingWeapon() && weapon.magazine == currentAmmo)
         {
@@ -262,7 +282,7 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3)) SelectWeapon(wl.secondary);
 
         if (Input.GetKeyDown(KeyCode.R) && wl.selected.id != 0) ReloadGun(wl.selected); //Reload
-        else if(Input.GetKeyDown(KeyCode.E)) GadgetSpawn();
+        else if(Input.GetKeyDown(KeyCode.E)) GadgetUse();
         else if(Input.GetKeyDown(KeyCode.Tab)) Pickup();
         else if(Input.GetKeyDown(KeyCode.F)) SwapHand();
     }
@@ -337,28 +357,54 @@ public class Player : MonoBehaviour
 
     private void GadgetControl()
     {
-        if(gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget && gadgets.equippedGadget.isSpawned)
+        if(gadgets.equippedGadget != null && gadgets.equippedGadget.HasGadget() && gadgets.equippedGadget.IsSpawned() && gadgets.equippedGadget.ReturnAction() == Gadget.Action.Spawn)
         controlState = controlState == ControlState.Player ? ControlState.Gadget : ControlState.Player;
         else controlState = ControlState.Player;
     }
 
-    private void GadgetSpawn()
+    private void GadgetUse()
     {
-        if (gadgets.equippedGadget != null && gadgets.equippedGadget.hasGadget)
+        if(gadgets.equippedGadget != null)
         {
-            if(!gadgets.equippedGadget.isSpawned)
+            if (gadgets.equippedGadget.ReturnAction() == Gadget.Action.Spawn)
             {
-                gadget = Instantiate(gadgets.equippedGadget.prefab, gameObject.transform.position, Quaternion.identity);
-                gadgets.equippedGadget.isSpawned = true;
-                gadgetTimer.StartGadgetTimer(10f);
+                if(!gadgets.equippedGadget.IsSpawned())
+                {
+                    gadget = Instantiate(gadgets.equippedGadget.prefab, gameObject.transform.position, Quaternion.identity);
+                    gadgets.equippedGadget.SetSpawned(true);
+                    gadgetTimer.StartGadgetTimer(10f);
+                }
+                else if(Vector2.Distance(gameObject.transform.position, gadget.transform.position) < 2f)
+                {
+                    gadget.GetComponent<RC>().DestroyRC();
+                    gadgets.equippedGadget.SetSpawned(false);
+                    gadgetTimer.StopGadgetTimer();
+                }
             }
-            else if(Vector2.Distance(gameObject.transform.position, gadget.transform.position) < 2f)
+            else if(gadgets.equippedGadget.ReturnAction() == Gadget.Action.Laser)
             {
-                gadget.GetComponent<RC>().DestroyRC();
-                gadgets.equippedGadget.isSpawned = false;
-                gadgetTimer.StopGadgetTimer();
+                gadgets.equippedGadget.SetSpawned(!gadgets.equippedGadget.IsSpawned());
+                LaserRender.SetStatus(gadgets.equippedGadget.IsSpawned());
             }
         }
+    }
+
+    private void LaserGadget()
+    {
+        float distance = 20f;
+        Vector2 pos2;
+        Vector2 rayDirection = MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z + 90f) * distance;
+
+        RaycastHit2D ray = Physics2D.Raycast(firePoint.transform.position, rayDirection, distance, collisionLayer);
+        Debug.DrawRay(firePoint.transform.position, rayDirection, Color.green, 1f);
+        print("Ray");
+        if(ray.collider != null) pos2 = ray.point;
+        else
+        {
+            pos2 = (Vector2) firePoint.position + rayDirection;
+        }
+
+        LaserRender.SetPositions((Vector2) firePoint.position, pos2);
     }
 
     public void SelectWeapon(Weapon weapon) /* Funkcia, ktorá zmení premennú aktuálne držanej veci */
@@ -435,7 +481,7 @@ public class Player : MonoBehaviour
     public void OnGadgetTimerStop()
     {
         gadget.GetComponent<RC>().DestroyRC();
-        gadgets.equippedGadget.isSpawned = false;
+        gadgets.equippedGadget.SetSpawned(false);
         GadgetControl();
     }
 }

@@ -10,7 +10,6 @@ public class Weapon
     public int ammo = 0;
     public float cooldown = 0;
     public bool isCooldown = false;
-    //public bool hasWeapon = false;
     public bool playerIgnoreCooldown = false;
     public string shootAnimationName, reloadAnimationName;
 
@@ -53,16 +52,6 @@ public class Weapon
             this.magazine += 1;
         }
     }
-
-    /*public void SetWeapon(bool hasWeapon)
-    {
-        this.hasWeapon = hasWeapon;
-    }*/
-
-    /*public bool HasWeapon()
-    {
-        return this.hasWeapon;
-    }*/
 
     public void SetCooldown(float cooldown)
     {
