@@ -5,8 +5,13 @@ using UnityEngine;
 public static class GlobalValues
 {
     public const byte WEAPONS_COUNT = 4;
-    public const byte version = 1;
-    public const string versionText = "V0.2a";
+    public const byte version = 2;
+    public const string versionText = "V0.2.1a";
     public static byte difficulty;
     public static byte fov;
+
+    /*
+    0.2a    - 1
+    0.2.1a  - 2
+    */
 }
