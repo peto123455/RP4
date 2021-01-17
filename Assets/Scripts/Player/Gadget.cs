@@ -14,7 +14,6 @@ public class Gadget
     int id;
     string name;
     Action action;
-    bool hasGadget = false;
     bool isSpawned = false;
     public GameObject prefab;
     
@@ -34,16 +33,6 @@ public class Gadget
     public void SetSpawned(bool isSpawned)
     {
         this.isSpawned = isSpawned;
-    }
-
-    public void SetGadget(bool hasGadget)
-    {
-        this.hasGadget = hasGadget;
-    }
-
-    public bool HasGadget()
-    {
-        return this.hasGadget;
     }
 
     public Action ReturnAction()

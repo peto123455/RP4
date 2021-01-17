@@ -21,6 +21,7 @@ public static class SaveSystem
         healthSystem.SetArmor(PlayerPrefs.GetInt("armor", 100));
         healthSystem.SetMaxHealth(100 + PlayerPrefs.GetInt("healthLvl", 0) * 5);
         healthSystem.SetMaxShield(100 + PlayerPrefs.GetInt("shieldLvl", 0) * 5);
+        if(PlayerPrefs.GetInt("selectedGadget", -1) != -1) Player.player.gadgets.EquipGadget(Player.player.gadgets.gadgets[PlayerPrefs.GetInt("selectedGadget", -1)]);
         GlobalValues.fov = (byte) PlayerPrefs.GetInt("fovLvl", 0);
         GlobalValues.difficulty = (byte) PlayerPrefs.GetInt("difficulty", 0);
         money.SetMoney(PlayerPrefs.GetInt("money", 0));
@@ -85,6 +86,9 @@ public static class SaveSystem
         PlayerPrefs.SetInt("healthLvl", 0);
         PlayerPrefs.SetInt("shieldLvl", 0);
         PlayerPrefs.SetInt("fovLvl", 0);
+        PlayerPrefs.SetInt("rc", 0);
+        PlayerPrefs.SetInt("laser", 0);
+        PlayerPrefs.SetInt("selectedGadget", -1);
         for(int i = 1; i < GlobalValues.WEAPONS_COUNT; ++i)
         {
             CreateWeaponSave(weaponTemp.GetWeaponByID(i));

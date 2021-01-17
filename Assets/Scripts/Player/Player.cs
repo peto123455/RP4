@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     public Sounds sounds;
     private Rigidbody2D rb;
     public WeaponList wl = new WeaponList();
-    private Gadgets gadgets;
+    public Gadgets gadgets;
     private GameObject gadget;
     private ControlState controlState = ControlState.Player;
 
@@ -57,9 +57,6 @@ public class Player : MonoBehaviour
         gadgets = GetComponent<Gadgets>();
         healthSystem = GetComponent<HealthSystem>();
         gadgetTimer = GetComponent<GadgetTimer>();
-
-        gadgets.SetGadget(gadgets.gadgets[0], true);
-        gadgets.EquipGadget(gadgets.gadgets[0]);
 
         SaveSystem.OnPlayerLoad();
         SaveSystem.LoadSave();
@@ -89,7 +86,7 @@ public class Player : MonoBehaviour
                 rb.velocity = new Vector2(0f, 0f);
                 feet.SetBool("isWalking", false);
             }
-            if (gadgets.equippedGadget.ReturnAction() == Gadget.Action.Laser && gadgets.equippedGadget.IsSpawned())
+            if (gadgets.equippedGadget != null && gadgets.equippedGadget.ReturnAction() == Gadget.Action.Laser && gadgets.equippedGadget.IsSpawned())
             {
                 if(Check()) LaserGadget();
                 else LaserRender.Reset();
@@ -357,7 +354,7 @@ public class Player : MonoBehaviour
 
     private void GadgetControl()
     {
-        if(gadgets.equippedGadget != null && gadgets.equippedGadget.HasGadget() && gadgets.equippedGadget.IsSpawned() && gadgets.equippedGadget.ReturnAction() == Gadget.Action.Spawn)
+        if(gadgets.equippedGadget != null && gadgets.equippedGadget.IsSpawned() && gadgets.equippedGadget.ReturnAction() == Gadget.Action.Spawn)
         controlState = controlState == ControlState.Player ? ControlState.Gadget : ControlState.Player;
         else controlState = ControlState.Player;
     }
@@ -397,7 +394,6 @@ public class Player : MonoBehaviour
 
         RaycastHit2D ray = Physics2D.Raycast(firePoint.transform.position, rayDirection, distance, collisionLayer);
         Debug.DrawRay(firePoint.transform.position, rayDirection, Color.green, 1f);
-        print("Ray");
         if(ray.collider != null) pos2 = ray.point;
         else
         {

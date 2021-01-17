@@ -22,9 +22,4 @@ public class Gadgets : MonoBehaviour
         this.equippedGadget = gadget;
     }
 
-    public void SetGadget(Gadget gadget, bool has)
-    {
-        gadget.SetGadget(has);
-    }
-
 }
