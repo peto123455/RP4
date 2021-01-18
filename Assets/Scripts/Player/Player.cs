@@ -57,7 +57,10 @@ public class Player : MonoBehaviour
         gadgets = GetComponent<Gadgets>();
         healthSystem = GetComponent<HealthSystem>();
         gadgetTimer = GetComponent<GadgetTimer>();
+    }
 
+    void Start()
+    {
         SaveSystem.OnPlayerLoad();
         SaveSystem.LoadSave();
     }
