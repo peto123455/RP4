@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickupScript : MonoBehaviour
 {
     [SerializeField] private  GameObject floatingText;
-    [SerializeField] private Sprite glockSprite, akSprite, fakSprite, vestSprite, spasSprite;
+    [SerializeField] private Sprite glockSprite, akSprite, fakSprite, vestSprite, spasSprite, moneySprite;
     [SerializeField] private int type, amount;
 
 
@@ -23,6 +23,7 @@ public class PickupScript : MonoBehaviour
         else if (type == 3) GetComponent<SpriteRenderer>().sprite = spasSprite;
         else if (type == 101) GetComponent<SpriteRenderer>().sprite = fakSprite;
         else if (type == 102) GetComponent<SpriteRenderer>().sprite = vestSprite;
+        else if (type == 103) GetComponent<SpriteRenderer>().sprite = moneySprite;
     }
 
     void OnTriggerEnter2D(Collider2D collision) //Funkcia, ktorá sa vykoná pri kolízií hráča s objektom
@@ -81,6 +82,15 @@ public class PickupScript : MonoBehaviour
                         collision.gameObject.GetComponent<Player>().sounds.PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
                         Destroy(gameObject);
                     }
+                }
+                break;
+            case 103: //Peniaze
+                if (collision.gameObject.tag == "Player") //Overenie, či sa jedná o objekt s tagom "Player", čiže hráča
+                {
+                    ShowText(amount.ToString() + " money picked", 1.5f, 0);
+                    collision.gameObject.GetComponent<Player>().money.GiveMoney(amount);
+                    collision.gameObject.GetComponent<Player>().sounds.PlaySound(4, collision.gameObject.GetComponent<AudioSource>()); //Prehrá zvuk
+                    Destroy(gameObject);
                 }
                 break;
         }
