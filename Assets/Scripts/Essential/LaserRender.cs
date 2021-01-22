@@ -40,4 +40,10 @@ public static class LaserRender
     {
         return LaserRender.isOverride;
     }
+
+    public static void Restart()
+    {
+        Reset();
+        isRendered = false;
+    }
 }

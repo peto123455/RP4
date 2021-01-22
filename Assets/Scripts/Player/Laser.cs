@@ -8,6 +8,7 @@ public class Laser : MonoBehaviour
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
+        ResetOnStart();
     }
 
     void LateUpdate()
@@ -19,5 +20,11 @@ public class Laser : MonoBehaviour
             lr.SetPosition(1, LaserRender.pos2);
         }
         else lr.positionCount = 0;
+    }
+
+    private void ResetOnStart()
+    {
+        LaserRender.Reset();
+        lr.positionCount = 0;
     }
 }
