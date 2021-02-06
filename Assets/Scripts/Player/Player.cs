@@ -399,7 +399,7 @@ public class Player : MonoBehaviour
         Vector2 rayDirection = MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z + 90f) * distance;
 
         RaycastHit2D ray = Physics2D.Raycast(firePoint.transform.position, rayDirection, distance, collisionLayer);
-        Debug.DrawRay(firePoint.transform.position, rayDirection, Color.green, 1f);
+        //Debug.DrawRay(firePoint.transform.position, rayDirection, Color.green, 1f);
         if(ray.collider != null) pos2 = ray.point;
         else
         {
