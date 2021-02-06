@@ -14,11 +14,14 @@ public class Bullet : MonoBehaviour
     {
         if(collision.collider.tag == "Enemy")
         {
-            Enemy enemy = collision.collider.GetComponent<Enemy>();
-            enemy.healthSystem.TakeDamage(damage, critical, shooter);
+            HealthSystem enemy = collision.collider.GetComponent<HealthSystem>();
+            enemy.TakeDamage(damage, critical, shooter);
 
-            GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
-            Destroy(bloodInstance, 2f);
+            if(enemy.gameObject.GetComponent<Turret>() == null)
+            {
+                GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
+                Destroy(bloodInstance, 2f);
+            }
         }
         else if(collision.collider.tag == "Player")
         {

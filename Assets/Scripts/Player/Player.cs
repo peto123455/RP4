@@ -134,11 +134,14 @@ public class Player : MonoBehaviour
                     RaycastHit2D checkRay = Physics2D.Raycast(gameObject.transform.position, mousePos - new Vector2(gameObject.transform.position.x, gameObject.transform.position.y), 1.5f, enemyLayer);
                     if (checkRay.collider != null && checkRay.collider.tag == "Enemy")
                     {
-                        Enemy enemy = checkRay.collider.GetComponent<Enemy>();
-                        enemy.healthSystem.TakeDamage(100, false, gameObject);
+                        HealthSystem enemy = checkRay.collider.GetComponent<HealthSystem>();
+                        enemy.TakeDamage(100, false, gameObject);
                         sounds.PlaySound(wl.selected.sound, sound);
-                        GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
-                        Destroy(hitInstance, 2f);
+                        if(enemy.gameObject.GetComponent<Turret>() == null)
+                        {
+                            GameObject hitInstance = Instantiate(hitEffect, checkRay.point, Quaternion.identity);
+                            Destroy(hitInstance, 2f);
+                        }
                     }
                 }
                 else if(wl.selected.magazine > 0)

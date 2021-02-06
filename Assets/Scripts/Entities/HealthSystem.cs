@@ -35,9 +35,14 @@ public class HealthSystem : MonoBehaviour
         if(killedBy != null)
         {
             if(gameObject.GetComponent<Player>() != null) gameObject.GetComponent<Player>().OnDeath();
+            else if(gameObject.GetComponent<Turret>() != null)
+            {
+                if (killedBy.tag == "Player") killedBy.GetComponent<Player>().money.GiveMoney(20);
+                gameObject.GetComponent<Turret>().OnDeath();
+            }
             else if(gameObject.GetComponent<Enemy>() != null)
             {
-                if (killedBy.tag == "Player") killedBy.GetComponent<Player>().money.GiveMoney(10); 
+                if (killedBy.tag == "Player") killedBy.GetComponent<Player>().money.GiveMoney(15); 
                 gameObject.GetComponent<Enemy>().OnDeath();
             }
         }
