@@ -182,6 +182,10 @@ MonoBehaviour:
   weaponLayer:
     serializedVersion: 2
     m_Bits: 262144
+  enemyVisible:
+    serializedVersion: 2
+    m_Bits: 768
+  gadgets: {fileID: 0}
   healthSystem: {fileID: 0}
 --- !u!50 &2382770942122379489
 Rigidbody2D:
@@ -380,7 +384,7 @@ MonoBehaviour:
   time: 0
   timeLeft: 0
   active: 0
-  instance: {fileID: 0}
+  timerIns: {fileID: 0}
 --- !u!1 &2382770943372008388
 GameObject:
   m_ObjectHideFlags: 0

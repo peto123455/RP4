@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
     public int currentLevel;
-    public LayerMask enemyLayer, collisionLayer, weaponLayer;
+    public LayerMask enemyLayer, collisionLayer, weaponLayer, enemyVisible;
     private AudioSource sound = new AudioSource();
 
     //private float speedAnimation;
@@ -188,6 +188,13 @@ public class Player : MonoBehaviour
 
         Rigidbody2D rbBullet = bulletPrefab.GetComponent<Rigidbody2D>();
         rbBullet.AddForce(firePoint.up * 25f, ForceMode2D.Impulse);
+
+        NotifyEnemies();
+    }
+
+    private void NotifyEnemies()
+    {
+        CheckForEnemiesVisible("Enemy");
     }
 
     private void FOVMovement()
@@ -333,6 +340,21 @@ public class Player : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void CheckForEnemiesVisible(string tag, int rays = 40, float distance = 18f)
+    {
+        float angle = 0;
+
+        for(int i = 0; i < rays; ++i)
+        {
+            RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle) * distance, distance, enemyVisible);
+            angle += 360f/rays;
+            if(ray.collider != null && ray.collider.GetComponent<Enemy>() != null)
+            {
+                ray.collider.GetComponent<Enemy>().TurnAtObject(gameObject, true);
+            }
+        }
     }
 
     private void DropWeapon(int slot)
