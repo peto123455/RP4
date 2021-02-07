@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WeaponList
 {
-    public Weapon primary, secondary, selected;
+    public Weapon primary, secondary, selected, nothing;
 
     public List<Weapon> weapons = new List<Weapon>
     {
@@ -21,35 +21,34 @@ public class WeaponList
 
     public Weapon GetHoldingWeapon()
     {
-        //return wl.GetWeaponByID(holdingItem);
         return selected;
     }
     public void EquipWeapon(Weapon weapon)
     {
-        if(weapon.slot == 1) primary = weapon;
-        else if(weapon.slot == 2) secondary = weapon;
+        GetWeaponSlot(weapon) = weapon;
     }
 
     public void NullWeapon(Weapon weapon)
     {
-        if(weapon.slot == 1) primary = null;
-        else if(weapon.slot == 2) secondary = null;
+        GetWeaponSlot(weapon) = null;
     }
 
     public bool IsWeaponSlotOccupied(Weapon weapon)
     {
-        if(weapon.slot == 1) return primary != null;
-        else if(weapon.slot == 2) return secondary != null;
-
-        return false;
+        return GetWeaponSlot(weapon) != null;
     }
 
     public bool HasThisWeapon(Weapon weapon)
     {
-        if(weapon.slot == 1 && primary == weapon) return true;
-        else if(weapon.slot == 2 && secondary == weapon) return true;
-        else if(weapon.slot == 0) return true;
+        if(weapon.slot == 0) return true;
+        return GetWeaponSlot(weapon) == weapon;
+    }
 
-        return false;
+    private ref Weapon GetWeaponSlot(Weapon weapon)
+    {
+        if(weapon.slot == 1) return ref primary;
+        else if(weapon.slot == 2) return ref secondary;
+
+        return ref nothing;
     }
 }

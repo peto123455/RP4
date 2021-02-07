@@ -12,24 +12,18 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.collider.tag == "Enemy")
+        if(collision.collider.tag == "Enemy" || collision.collider.tag == "Player")
         {
-            HealthSystem enemy = collision.collider.GetComponent<HealthSystem>();
-            enemy.TakeDamage(damage, critical, shooter);
+            if(collision.collider.tag == "Player") damage = damage/(3-GlobalValues.difficulty);
 
-            if(enemy.gameObject.GetComponent<Turret>() == null)
+            HealthSystem entity = collision.collider.GetComponent<HealthSystem>();
+            entity.TakeDamage(damage, critical, shooter);
+
+            if(entity.gameObject.GetComponent<Turret>() == null)
             {
                 GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
                 Destroy(bloodInstance, 2f);
             }
-        }
-        else if(collision.collider.tag == "Player")
-        {
-            Player player = collision.collider.GetComponent<Player>();
-            player.healthSystem.TakeDamage(damage/(3-GlobalValues.difficulty), critical, shooter);
-
-            GameObject bloodInstance = Instantiate(blood, gameObject.transform.position, Quaternion.identity);
-            Destroy(bloodInstance, 2f);
         }
         Destroy(gameObject);
     }
