@@ -15,41 +15,41 @@ public class Player : MonoBehaviour
 
     [SerializeField] private FOV fov;
     [SerializeField] private Transform firePoint, fireCheckPoint, CPM, CPL, CPR;
-    [SerializeField] private PauseMenu menu;
     [SerializeField] public GameObject timerIns, itemPrefab;
 
+    /* Public */
+    public WeaponList wl = new WeaponList();
+    public Gadgets gadgets;
     public Money money = new Money();
-
     public Animator feet, body;
     public float speed = 5.0f;
     public GameObject bulletPistol, hitEffect, floatingText;
     public int currentLevel;
-    public LayerMask enemyLayer, collisionLayer, weaponLayer, enemyVisible;
+    public HealthSystem healthSystem;
+    public static Player player;
+
+    /* Private */
+    private PauseMenu menu;
+    private LayerMask enemyLayer, collisionLayer, weaponLayer, enemyVisible;
     private AudioSource sound = new AudioSource();
-
-    //private float speedAnimation;
-
-    //private int holdingItem = 0;
     private Vector2 mouseVec, mousePos;
     public Sounds sounds;
     private Rigidbody2D rb;
-    public WeaponList wl = new WeaponList();
-    public Gadgets gadgets;
     private GameObject gadget;
     private ControlState controlState = ControlState.Player;
-
-    public HealthSystem healthSystem;
-
     private bool hasControl;
-
     private GadgetTimer gadgetTimer;
-
     private BulletList bulletList = new BulletList();
-
-    public static Player player;
 
     void Awake() /* Funkcia, ktorá sa volá pri spustení skriptu */
     {
+        /* Layer Masky */
+        enemyLayer = LayerMask.GetMask("enemyLayer");
+        collisionLayer = LayerMask.GetMask("ObjectNT");
+        weaponLayer = LayerMask.GetMask("Weapon");
+        enemyVisible = LayerMask.GetMask("enemyLayer", "ObjectNT");
+
+        menu = GameObject.Find("MenuCanvas").GetComponent<PauseMenu>();
         player = this;
         rb = GetComponent<Rigidbody2D>(); /* Zoberie komponent Rigidbody2D a uloží ho do rb*/
         sounds = new Sounds();
@@ -112,7 +112,6 @@ public class Player : MonoBehaviour
     private void FixedUpdate() /* Funkcia, ktorá sa pravidelne vykonáva nezávisle od počtu snímkov za sekundu */
     {
         UpdateCooldowns();
-        CheckPlayerStatus();
     }
 
     private void CheckKeysGadget()
@@ -437,14 +436,6 @@ public class Player : MonoBehaviour
         body.SetInteger("item", weapon.id); /* Nastaví premennú v Animátorovi, ktorý začne prehrávať príslušnú animáciu, ktorá bola premennej pridelená */
         wl.selected = weapon;
         sounds.PlaySound(weapon.drawSound, sound);
-    }
-
-    private void CheckPlayerStatus()
-    {
-        //if(GetSelectedItem() == 1 && !wl.GetWeaponByID(1).HasWeapon()) SelectItem(0);
-        //else if (GetSelectedItem() == 2 && !wl.GetWeaponByID(2).HasWeapon()) SelectItem(0);
-        //else if (GetSelectedItem() == 3 && !wl.GetWeaponByID(3).HasWeapon()) SelectItem(0);
-        //if(wl.selected != wl.primary && wl.selected != wl.secondary) SelectWeapon(wl.weapons[0]);
     }
 
     private void Movement()

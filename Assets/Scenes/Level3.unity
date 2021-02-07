@@ -12374,6 +12374,14 @@ PrefabInstance:
       propertyPath: timerIns
       value: 
       objectReference: {fileID: 1805889285}
+    - target: {fileID: 2382770942122379491, guid: 39c6ca5b2ee28e949a915bb2a6a8e926, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382770942122379491, guid: 39c6ca5b2ee28e949a915bb2a6a8e926, type: 3}
+      propertyPath: enemyVisible.m_Bits
+      value: 8960
+      objectReference: {fileID: 0}
     - target: {fileID: 2382770942122379492, guid: 39c6ca5b2ee28e949a915bb2a6a8e926, type: 3}
       propertyPath: m_RootOrder
       value: 6

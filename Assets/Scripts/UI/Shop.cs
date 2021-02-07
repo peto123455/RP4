@@ -55,7 +55,8 @@ public class Shop : MonoBehaviour
         foreach(GadgetShopItem gadgetShopItem in gadgets)
         {
             gadgetShopItem.buttonBuy.interactable = !gadgetShopItem.bought;
-            gadgetShopItem.button.interactable = gadgetShopItem.bought;
+            if(gadgetShopItem == selected) gadgetShopItem.button.interactable = false;
+            else gadgetShopItem.button.interactable = gadgetShopItem.bought;
             gadgetShopItem.priceText.text = gadgetShopItem.price.ToString() + " $";
         }
     }
