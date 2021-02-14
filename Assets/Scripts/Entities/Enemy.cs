@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     public Sounds sounds;
     private AudioSource sound;
     public HealthSystem healthSystem;
+    private Quaternion lookingAt;
 
     public static List<Enemy> enemyList = new List<Enemy>();
 
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
+        lookingAt = transform.rotation;
         enemyList.Add(this);
         fov = 90f;
         viewDistance = 14f;
@@ -46,6 +48,7 @@ public class Enemy : MonoBehaviour
     {
         ChceckVision();
         GetComponent<Animator>().SetInteger("item", holdingGun);
+        LinearTurn();
     }
 
     private void ChceckVision()
@@ -53,26 +56,53 @@ public class Enemy : MonoBehaviour
         SetDirection(gameObject.transform.rotation.eulerAngles.z);
 
         viewDistance = 14f + (GlobalValues.difficulty * 2f);
-        int rayCount = 20;
+        int rayCount = 21;
         float angle = startingAngle;
         float angleIncrease = fov / rayCount;
 
         for (int i = 0; i <= rayCount; i++)
         {
-            RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle), viewDistance, layerMask);
-            if (ray.collider != null && ray.collider.tag == "Player")
+            if(i == (rayCount-1)/2)
             {
-                /*float playerAngle = Mathf.Atan2(ray.collider.transform.position.x - gameObject.transform.position.x, ray.collider.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
-                gameObject.transform.rotation = Quaternion.Euler(0, 0, -playerAngle);*/
-
-                TurnAtObject(ray.collider.gameObject, true);
-
-                if(Time.time > timer)
+                List<RaycastHit2D> rays = new List<RaycastHit2D>()
                 {
-                    Attack();
+                    Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle-3f), viewDistance, layerMask),
+                    Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle-1.5f), viewDistance, layerMask),
+                    Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle), viewDistance, layerMask),
+                    Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle+1.5f), viewDistance, layerMask),
+                    Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle+3f), viewDistance, layerMask)
+                };
+
+                foreach(RaycastHit2D ray in rays)
+                {
+                    if(ray.collider != null && ray.collider.tag == "Player") Seen(ray);
                 }
             }
+            else
+            {
+                RaycastHit2D ray = Physics2D.Raycast(gameObject.transform.position, MathFunctions.AngleToVector(angle), viewDistance, layerMask);
+                Debug.DrawRay(gameObject.transform.position, MathFunctions.AngleToVector(angle)*viewDistance, Color.red, 0.2f);
+                if (ray.collider != null && ray.collider.tag == "Player") Seen(ray);
+            }
             angle -= angleIncrease;
+        }
+    }
+
+    private void Seen(RaycastHit2D ray)
+    {
+        TurnAtObjectOffset(ray.collider.gameObject, ray.distance, true);
+
+        if(Time.time > timer)
+        {
+            RaycastHit2D ray2 = Physics2D.Raycast(firePoint.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), viewDistance, layerMask);
+            Debug.DrawRay(firePoint.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f)*viewDistance, Color.green, 1f);
+            RaycastHit2D ray3 = Physics2D.Raycast(firePointO.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), viewDistance, layerMask);
+            if(ray2.collider != null && ray2.collider.tag == "Player") Attack();
+            else if(ray3.collider != null && ray3.collider.tag == "Player")
+            {
+                SwitchSide();
+                Attack();
+            }
         }
     }
 
@@ -99,8 +129,13 @@ public class Enemy : MonoBehaviour
         {
             RaycastHit2D rayO = Physics2D.Raycast(firePointO.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), 1f, collision);
             Debug.DrawRay(firePointO.transform.position, -MathFunctions.AngleToVector(gameObject.transform.rotation.eulerAngles.z - 90f), Color.green, 1f);
-            if(rayO.collider == null) gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, 1f, 0f);
+            if(rayO.collider == null) SwitchSide();//gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, 1f, 0f);
         }
+    }
+
+    private void SwitchSide()
+    {
+        gameObject.transform.localScale = new Vector3(-gameObject.transform.localScale.x, 1f, 0f);
     }
 
     private void ReloadWeapon(Weapon weapon)
@@ -148,6 +183,18 @@ public class Enemy : MonoBehaviour
     {
         if(isDeaf && !overrideDeaf) return;
         float playerAngle = Mathf.Atan2(obj.transform.position.x - gameObject.transform.position.x, obj.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
-        gameObject.transform.rotation = Quaternion.Euler(0, 0, -playerAngle);
+        // gameObject.transform.rotation = Quaternion.Euler(0, 0, -playerAngle);
+        lookingAt = Quaternion.Euler(0, 0, -playerAngle);
+    }
+    public void TurnAtObjectOffset(GameObject obj, float distance, bool overrideDeaf = true)
+    {
+        if(isDeaf && !overrideDeaf) return;
+        float playerAngle = Mathf.Atan2(obj.transform.position.x - gameObject.transform.position.x, obj.transform.position.y - gameObject.transform.position.y) * Mathf.Rad2Deg;
+        lookingAt = Quaternion.Euler(0, 0, -(playerAngle) + Mathf.Atan(distance / 0.41f));
+    }
+
+    private void LinearTurn()
+    {
+        gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, lookingAt, Time.deltaTime * (6f + (3-GlobalValues.difficulty)));
     }
 }
