@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        ChceckVision();
+        if(Vector2.Distance(transform.position, Player.player.transform.position) < 25f) ChceckVision();
         GetComponent<Animator>().SetInteger("item", holdingGun);
         LinearTurn();
     }

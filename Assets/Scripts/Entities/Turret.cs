@@ -27,7 +27,7 @@ public class Turret : MonoBehaviour
 
     void Update()
     {
-        if(isAlive) CheckVision();
+        if(isAlive && (Vector2.Distance(transform.position, Player.player.transform.position) < 25f)) CheckVision();
     }
 
     private void CheckVision()
