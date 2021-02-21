@@ -195,6 +195,6 @@ public class Enemy : MonoBehaviour
 
     private void LinearTurn()
     {
-        gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, lookingAt, Time.deltaTime * (6f + (3-GlobalValues.difficulty)));
+        gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, lookingAt, Time.deltaTime * (6f + GlobalValues.difficulty));
     }
 }
