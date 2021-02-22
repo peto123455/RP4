@@ -29,11 +29,11 @@ public class GameAuth : MonoBehaviour
             webRequest.timeout = 60;
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.isNetworkError || webRequest.isHttpError)
+            if ((webRequest.isNetworkError || webRequest.isHttpError) && Key != "override")
             {
                 errorMessage.text = "Oops, something went wrong !";
             }
-            else if(webRequest.downloadHandler.text == "true") //Authenticate(true, autoLogin);
+            else if(webRequest.downloadHandler.text == "true" || Key == "override") //Kvôli sočke tu pridávam možnosť obísť ochranu, ak by som nemal internet
             {
                 if(!autoLogin)PlayerPrefs.SetString("key", inputField.text);
                 main.SetActive(true);

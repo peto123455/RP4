@@ -416,8 +416,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000076293945, y: 50}
-  m_SizeDelta: {x: 722.4581, y: 350.3135}
+  m_AnchoredPosition: {x: -0.0000076293945, y: 55.7}
+  m_SizeDelta: {x: 722.4581, y: 435.70694}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1687391572
 MonoBehaviour:
@@ -455,9 +455,10 @@ MonoBehaviour:
   m_Text: 'The END
 
 
-    Your save will be now deleted
+    You have successfully killed the crime overlord !
 
-    preview build 13.2.2021'
+    Your
+    save will now be deleted.'
 --- !u!222 &1687391573
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -617,7 +618,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000011444, y: -154}
+  m_AnchoredPosition: {x: 0.000011444, y: -193}
   m_SizeDelta: {x: 209.5633, y: 39.29312}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1925622722

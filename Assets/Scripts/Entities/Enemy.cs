@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform firePoint, firePointO;
     [SerializeField] private GameObject bulletPistol;
     [SerializeField] private bool isDeaf = false;
+    [SerializeField] private bool isObjective = false;
     //private int health = 100;
     private float fov;
     private float timer = 0;
@@ -171,6 +172,16 @@ public class Enemy : MonoBehaviour
 
         GameObject gun = Instantiate(gunPrefab, transform.position, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
         gun.GetComponent<PickupScript>().SetItem(holdingGun, wl.GetWeaponByID(holdingGun).maxMagazine);
+
+        if(isObjective)
+        {
+            SaveSystem.SaveGame();
+            int nextLevel = PlayerPrefs.GetInt("level", 1) + 1;
+            PlayerPrefs.SetInt("level", nextLevel);  
+
+            GameObject.Find("MenuCanvas").GetComponent<PauseMenu>().ShowCompleteMenu();   
+        }
+
         Destroy(gameObject); //Zničenie objektu nepriateľa
     }
 
