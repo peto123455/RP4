@@ -24,12 +24,13 @@ public class GameAuth : MonoBehaviour
 
         SwitchToCheck(true);
 
-        using(UnityWebRequest webRequest = UnityWebRequest.Get("http://13.49.138.187/gameAuth.php?gameKey=" + Key)) //Odosielam web request na môj veb, ktorý overí kľúč
+        using(UnityWebRequest webRequest = UnityWebRequest.Get("http://130.61.92.46/gameAuth.php?gameKey=" + Key)) //Odosielam web request na môj veb, ktorý overí kľúč
         {
             webRequest.timeout = 60;
             yield return webRequest.SendWebRequest();
 
-            if ((webRequest.isNetworkError || webRequest.isHttpError) && Key != "override")
+            //if ((webRequest.isNetworkError || webRequest.isHttpError) && Key != "override")
+            if ((webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError) && Key != "override")
             {
                 errorMessage.text = "Oops, something went wrong !";
             }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,12 +20,13 @@ public class VersionCheck : MonoBehaviour
 
     public IEnumerator CheckVersion()
     {
-        using(UnityWebRequest webRequest = UnityWebRequest.Get("http://13.49.138.187/version.php")) //Odosielam web request na môj veb, ktorý overí kľúč
+        using(UnityWebRequest webRequest = UnityWebRequest.Get("http://130.61.92.46/version.php")) //Odosielam web request na môj veb, ktorý overí kľúč
         {
             webRequest.timeout = 10;
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.isNetworkError || webRequest.isHttpError)
+            //if (webRequest.isNetworkError || webRequest.isHttpError)
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
                 state.SetActive(true);
                 stateText.text = "Version check error !";
